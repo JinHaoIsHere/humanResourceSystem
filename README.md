@@ -10,9 +10,24 @@ TBD
 ### API Design
 TBD
 ### Database Design
+Users
+* id
+* username (First Name& Last Name)
+* password
+* email
+* Title
+* Phone
+* Address
+* Role
+* Permission
+
 TBD
 
 ## Project Setup
+Please make sure the following is installed:
+
+* [NodeJS](https://nodejs.org/en/)
+
 ### Front End
 Go to `frontend` directory
 
