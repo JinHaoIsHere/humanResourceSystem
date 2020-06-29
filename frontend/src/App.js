@@ -1,10 +1,13 @@
 import React from 'react';
 import './App.css';
 
+import {ViewUsers} from './pages/UserManagement/index';
+
+
 function App() {
   return (
     <div className="App">
-      HR System Frontend
+      <ViewUsers></ViewUsers>
     </div>
   );
 }
