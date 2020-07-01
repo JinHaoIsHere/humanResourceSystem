@@ -1,6 +1,27 @@
+/* 
+possible color theme
+627264
+A1CDA8
+B5DFCA
+C5E7E2
+AD9BAA
+*/
+
 .NavBar {
-    height: 50px;
-    background-color: grey;
+    height: 70px;
+    background-color: #F4F5F4;
     display: flex;
     align-items: center;
+    color: #1A1D1A;
+    padding: 0 30px;
+    z-index: 10;
+}
+
+.NavItems {
+    list-style: none;
+}
+
+.NavItems li{
+    display: inline-block;
+    padding: 0 20px;
 }

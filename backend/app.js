@@ -15,6 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use((req, res, next) => { //not completed yet
+    req.db = db;
+    next();
+  });
+
 app.use('/', indexRouter);
 app.use('/api', usersRouter);
 

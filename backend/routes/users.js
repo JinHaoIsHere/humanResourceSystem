@@ -1,28 +1,24 @@
 var express = require('express');
-var mongoClient = require('mongodb').MongoClient;
 var router = express.Router();
-
-
+var db = require('../db/util');
+var mongoClient = require('mongodb').MongoClient;
+var config = require('../config');
 
 router.get(
     '/admin/usersList',
-
-    function(req, res, next){
-        dbName='hrdb';
-        mongoClient.connect('mongodb://localhost:27017', function (err, client) {
-            var db = client.db('hrdb');
-            db.collection('users', function (err, collection) {
-                 collection.find().toArray(function(err, items) {
-                    if(err) throw err;    
-                    console.log(items);       
-                    res.json({userslist:items});     
-                });
-                
-            });
-                        
-        });
-
+    async function (req, res, next) {
+        let client;
+        try {
+            client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
+            db = client.db(config.db.name);
+            
+            let dCollection = db.collection('users');
+            let result = await dCollection.find().toArray();
+            res.json({ userslist: result });
+        }
+        catch (err) { console.error(err); } // catch any mongo error here
+        finally { client.close(); }
     }
-  );
-  
+);
+
 module.exports = router;
