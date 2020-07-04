@@ -3,15 +3,14 @@ import './App.css';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import { ViewUsers } from './pages/UserManagement/index';
-
+import Layout from './components/Layout/Layout';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
-
+    <div className="App">
+      <Layout>
         <Switch>
-        <Route path='/'>
+          <Route path='/' exact>
             <ViewUsers></ViewUsers>
           </Route>
           <Route path='/viewusers'>
@@ -25,8 +24,8 @@ function App() {
             <ViewUsers></ViewUsers>
           </Route>
         </Switch>
-      </div>
-    </BrowserRouter>
+      </Layout>
+    </div>
 
   );
 }

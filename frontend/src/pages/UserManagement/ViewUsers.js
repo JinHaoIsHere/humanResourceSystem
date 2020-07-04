@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, CssBaseline, Toolbar } from '@material-ui/core';
-import NavBar from '../../components/NavBar/NavBar';
-import SideBar from '../../components/SideBar/SideBar';
-
+import Layout from '../../components/Layout/Layout';
+import MailIcon from '@material-ui/icons/Mail';
+import AddIcon from '@material-ui/icons/Add';
+import GroupIcon from '@material-ui/icons/Group';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import classes from './ViewUsers.module.css';
 const ViewUsers = (props) => {
     const [usersList, setUsers] = useState(null);
 
@@ -35,36 +40,42 @@ const ViewUsers = (props) => {
         });
     }
     return (
-        <div style={{ display: 'flex' }}>
-            <CssBaseline />
-            <NavBar />
-            <SideBar></SideBar>
-            <div style={{textAlign:'left'}}>
-            <Toolbar />
+        <React.Fragment>
+            <div className={classes.PageHeader}>
+                <div className={classes.Icon}>
+                    <GroupIcon />
+                </div>
                 <h2>View Users</h2>
-                <Button variant="contained" color="primary">Create a new User</Button>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">User Name</TableCell>
-                                <TableCell align="center">First Name</TableCell>
-                                <TableCell align="center">Last Name</TableCell>
-                                <TableCell align="center">Password</TableCell>
-                                <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Phone</TableCell>
-                                <TableCell align="center">Title</TableCell>
-                                <TableCell align="center">Role</TableCell>
-                                <TableCell align="center">Permission</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Button variant="contained" color="primary" style={{ marginLeft: 'auto' }}><AddIcon /></Button>
             </div>
-        </div>
+            <Card className={classes.Card}>
+                <CardContent>
+                <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                    <TableHead style={{backgroundColor:'#7EB4F1'}}>
+                        <TableRow>
+                            <TableCell align="center">User Name</TableCell>
+                            <TableCell align="center">First Name</TableCell>
+                            <TableCell align="center">Last Name</TableCell>
+                            <TableCell align="center">Password</TableCell>
+                            <TableCell align="center">Email</TableCell>
+                            <TableCell align="center">Phone</TableCell>
+                            <TableCell align="center">Title</TableCell>
+                            <TableCell align="center">Role</TableCell>
+                            <TableCell align="center">Permission</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+                </CardContent>
+            </Card>
+
+            
+        </React.Fragment>
+
     )
 }
 

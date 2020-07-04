@@ -16,9 +16,16 @@ router.get(
             let result = await dCollection.find().toArray();
             res.json({ userslist: result });
         }
-        catch (err) { console.error(err); } // catch any mongo error here
+        catch (err) { console.error(err); }
         finally { client.close(); }
     }
 );
+
+router.post(
+    '/admin/createUer',
+    async function(req, res){
+        
+    }
+)
 
 module.exports = router;

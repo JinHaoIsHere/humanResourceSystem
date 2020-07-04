@@ -12,10 +12,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
-
-
+import {Link} from 'react-router-dom'
+import GroupIcon from '@material-ui/icons/Group';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import ListIcon from '@material-ui/icons/List';
 const SideBar = () => {
     const drawerWidth = 240;
 
@@ -55,30 +55,30 @@ const SideBar = () => {
                 <div className={classes.drawerContainer}>
                     <List>
                         <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><GroupIcon /></ListItemIcon>
                             <ListItemText primary='All Users' />
                         </ListItem>
                         <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
-                            <ListItemText primary='Create User' />
+                            <ListItemIcon><PersonAddIcon /></ListItemIcon>
+                            <ListItemText primary='Create User' to='/createUser'><Link to='/createUser'>Create</Link></ListItemText>
                         </ListItem>
                     </List>
                     <Divider />
                     <List>
                     <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary='Group 1' />
                         </ListItem>
                         <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary='Group 2' />
                         </ListItem>
                         <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary='Group 3' />
                         </ListItem>
                         <ListItem button>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary='Group 4' />
                         </ListItem>
                     </List>
