@@ -25,3 +25,18 @@ AD9BAA
     display: inline-block;
     padding: 0 20px;
 }
+
+.NavItems a {
+    color: white;
+    height: 100%;
+    padding: 16px 10px;
+    border-bottom:  4px solid transparent;
+    text-decoration: none;
+}
+
+.NavItems a:hover,
+.NavItems a:active,
+.NavItems a.active{
+    border-bottom: 4px solid #D9E9FC;
+    color: white;
+}

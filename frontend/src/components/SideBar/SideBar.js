@@ -2,44 +2,29 @@ import React from 'react';
 //import classes from './SideBar.module.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
+
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import {Link} from 'react-router-dom'
+
 import GroupIcon from '@material-ui/icons/Group';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListIcon from '@material-ui/icons/List';
-const SideBar = () => {
+import myclasses from './SideBar.module.css';
+import {withRouter} from 'react-router-dom';
+const SideBar = (props) => {
     const drawerWidth = 240;
-
     const useStyles = makeStyles((theme) => ({
-        root: {
-            display: 'flex',
-        },
-        appBar: {
-            zIndex: theme.zIndex.drawer + 1,
-        },
         drawer: {
             width: drawerWidth,
             flexShrink: 0,
         },
         drawerPaper: {
             width: drawerWidth,
-        },
-        drawerContainer: {
-            overflow: 'auto',
-        },
-        content: {
-            flexGrow: 1,
-            padding: theme.spacing(3),
-        },
+        }
     }));
     const classes = useStyles();
     return (
@@ -52,20 +37,20 @@ const SideBar = () => {
                 }}
             >
                 <Toolbar />
-                <div className={classes.drawerContainer}>
+                <div className={myclasses.DrawerContainer}>
                     <List>
-                        <ListItem button>
+                        <ListItem button onClick={()=>{props.history.push('/viewUsers')}}>
                             <ListItemIcon><GroupIcon /></ListItemIcon>
-                            <ListItemText primary='All Users' />
+                            <ListItemText primary='All Users'/>
                         </ListItem>
-                        <ListItem button>
+                        <ListItem button onClick={()=>{props.history.push('/addUser')}}>
                             <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                            <ListItemText primary='Create User' to='/createUser'><Link to='/createUser'>Create</Link></ListItemText>
+                            <ListItemText primary='Create User'></ListItemText>
                         </ListItem>
                     </List>
                     <Divider />
                     <List>
-                    <ListItem button>
+                        <ListItem button>
                             <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary='Group 1' />
                         </ListItem>
@@ -88,4 +73,4 @@ const SideBar = () => {
     )
 }
 
-export default SideBar
+export default withRouter(SideBar)
