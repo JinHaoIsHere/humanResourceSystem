@@ -15,7 +15,6 @@ function App() {
           </Route>
           <Route path='/viewUsers' component={ViewUsers}>
           </Route>
-          {/* to be updated */}
           <Route path='/addUser'>
             Adding Users
           </Route>
