@@ -4,6 +4,19 @@ var db = require('../db/util');
 var mongoClient = require('mongodb').MongoClient;
 var config = require('../config');
 
+router.post(
+    '/login',
+    async function (req, res, next) {
+        client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
+        db = client.db(config.db.name);
+        let dCollection = db.collection('users');
+        let result = await dCollection.findOne(req.body);
+        console.log(result);
+        res.json({ user: result });
+    }
+);
+
+
 router.get(
     '/admin/usersList',
     async function (req, res, next) {
@@ -11,7 +24,7 @@ router.get(
         try {
             client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
             db = client.db(config.db.name);
-            
+
             let dCollection = db.collection('users');
             let result = await dCollection.find().toArray();
             res.json({ userslist: result });
@@ -23,8 +36,8 @@ router.get(
 
 router.post(
     '/admin/createUer',
-    async function(req, res){
-        
+    async function (req, res) {
+
     }
 )
 
