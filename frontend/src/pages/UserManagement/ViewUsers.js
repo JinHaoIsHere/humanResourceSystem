@@ -41,7 +41,7 @@ const ViewUsers = (props) => {
                     <TableCell align="center">{user.username}</TableCell>
                     <TableCell align="center">{user.firstname}</TableCell>
                     <TableCell align="center">{user.lastname}</TableCell>
-                    <TableCell align="center">{user.password}</TableCell>
+                    {/* <TableCell align="center">{user.password}</TableCell> */}
                     <TableCell align="center">{user.email}</TableCell>
                     <TableCell align="center">{user.phone}</TableCell>
                     <TableCell align="center">{user.title}</TableCell>
@@ -84,7 +84,7 @@ const ViewUsers = (props) => {
                                     <TableCell align="center">User Name</TableCell>
                                     <TableCell align="center">First Name</TableCell>
                                     <TableCell align="center">Last Name</TableCell>
-                                    <TableCell align="center">Password</TableCell>
+                                    {/* <TableCell align="center">Password</TableCell> */}
                                     <TableCell align="center">Email</TableCell>
                                     <TableCell align="center">Phone</TableCell>
                                     <TableCell align="center">Title</TableCell>
@@ -111,11 +111,11 @@ const ViewUsers = (props) => {
 //     };
 // }
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onIncrementCounter: () => dispatch({ type: "INC_COUNTER" })
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return {
+        onIncrementCounter: () => dispatch({ type: "INC_COUNTER" })
+    }
+}
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(ViewUsers);
