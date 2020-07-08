@@ -1,20 +1,21 @@
 import * as actionsType from './actions';
 
 const initialState = {
-    currentLogIn: null,
+    currentLogInToken: null,
 }
 
 const reducer = (state = initialState, action) => {
+    console.log(action);
     if (action.type === actionsType.LOGIN) {
         return {
             ...state,
-            currentLogIn: null,
+            currentLogInToken: action.token,
         }
     }
     if (action.type === actionsType.LOGOUT) {
         return {
             ...state,
-            currentLogIn: null,
+            currentLogInToken: null,
         }
     }
     return state;
