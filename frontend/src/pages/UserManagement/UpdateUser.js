@@ -1,7 +1,5 @@
-// draft six: 
-// next steps: web optimazation
-// convert the User.js into a component file
-// encapsulate the user permission and role into the utile file
+// draft two: with delete handler
+
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
@@ -12,10 +10,9 @@ import FromControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
 // import User from '../UserManagement/User/User'
 
-const AddUser = (props) => {
+const UpdateUser = (props) => {
     const [attributesState,setAttributesState] = useState({
         attributes: [
             {name: 'User Name', detail: ''},
@@ -72,6 +69,14 @@ const AddUser = (props) => {
         }
     };
 
+    const onDeleteHandler = (event) => {
+        let updatedAttributesState = {...attributesState};
+        for (let i=0; i<10; i++) {
+            updatedAttributesState.attributes[i].detail = null;
+        }
+        setAttributesState(updatedAttributesState);
+    };
+
     const useStyles = makeStyles((theme) => ({
         appBar: {
           position: 'relative',
@@ -112,7 +117,7 @@ const AddUser = (props) => {
 
     return (
         <React.Fragment>
-            <Typography variant="h6" gutterBottom className={classes.appbar}>Create a New User</Typography>
+            <Typography variant="h6" gutterBottom className={classes.appbar}>Update a User</Typography>
             <Grid container spacing={3} className={classes.layout}>
                 <Grid item xs={12} sm={6} className={classes.paper}>
                     <TextField required id="username" label={attributesState.attributes[0].name} fullWidth autoComplete="username"/>
@@ -146,7 +151,7 @@ const AddUser = (props) => {
                 <Grid item xs={12} sm={6} className={classes.paper}>
                     <TextField id="address" label={attributesState.attributes[9].name}fullWidth autoComplete="address"/>
                 </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={6}>
                     <FromControlLabel 
                     control={<Checkbox color="secondary" name="savedUser" value="yes"/>} 
                     label="Remember details for next time"/>
@@ -157,9 +162,12 @@ const AddUser = (props) => {
                 <Grid item xs={12} sm={2}>
                     <Button variant="contained" onClick={onSubmitHandler} color="primary" className={classes.button}>Submit</Button>
                 </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Button variant="contained" onClick={onDeleteHandler} color="primary" className={classes.button}>Delete</Button>
+                </Grid>
             </Grid>
         </React.Fragment>
     );
 }
 
-export default AddUser;
+export default UpdateUser;
