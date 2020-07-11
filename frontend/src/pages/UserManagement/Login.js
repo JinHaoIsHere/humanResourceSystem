@@ -4,7 +4,8 @@ import { Card, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import * as actionsType from '../../store/actions';
+import * as actionsType from '../../store/actions/actionTypes';
+import * as actions from '../../store/actions';
 //import classes from './Login.module.css';
 const Login = (props) => {
     const [form, setForm] = React.useState({
@@ -34,14 +35,14 @@ const Login = (props) => {
                 if (response.data.userToken) {
                     // get JWT token from backend
                     // and save this token to redux
-                    props.onLoginToken(response.data.userToken);
+                    props.onLoginToken(response.data.userToken, form.username);
                     props.history.push('/viewUsers');
                 }
                 else {
-                    alert('wrong username or password');
+                    //alert('wrong username or password');
+                    // toastr.success('Success Message','', {displayDuration:3000});
                 }
             });
-
     }
     const useStyles = makeStyles((theme) => ({
         card: {
@@ -89,7 +90,7 @@ const Login = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoginToken: (token) => dispatch({ type: actionsType.LOGIN, token: token })
+        onLoginToken: (token, username) => dispatch(actions.loginUser(username, token)),
     }
 }
 

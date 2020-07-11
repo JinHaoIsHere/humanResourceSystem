@@ -36,6 +36,7 @@ const ViewUsers = (props) => {
             ? usersList.userslist.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : usersList.userslist
         ).map((user) => {
+            const perm = Array.isArray(user.permission) ? user.permission.join(', ') : '';
             return (
                 <TableRow key={user._id}>
                     <TableCell align="center">{user.username}</TableCell>
@@ -46,7 +47,7 @@ const ViewUsers = (props) => {
                     <TableCell align="center">{user.phone}</TableCell>
                     <TableCell align="center">{user.title}</TableCell>
                     <TableCell align="center">{user.role}</TableCell>
-                    <TableCell align="center">{user.permission.join(', ')}</TableCell>
+                    <TableCell align="center">{perm}</TableCell>
                 </TableRow>
             )
         });

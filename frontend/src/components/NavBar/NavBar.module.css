@@ -18,12 +18,18 @@ AD9BAA
 }
 
 .NavItems {
-    list-style: none;
+    display: flex;
+    width: 100%;
+    padding:0;
 }
 
 .NavItems li{
     display: inline-block;
     padding: 0 20px;
+}
+
+.NavItems li:last-child{
+    margin-left: auto;
 }
 
 .NavItems a {
