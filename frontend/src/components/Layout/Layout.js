@@ -4,6 +4,7 @@ import SideBar from '../SideBar/SideBar';
 import { CssBaseline, Toolbar } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as acitons from '../../store/actions';
+import Toastr from '../Toastr/Toastr';
 //This component basically contains navBar SideBar and Footer. Could wrap the entire application
 // To be implemented features:
 // 1. Footer
@@ -18,6 +19,7 @@ const Layout = (props) => {
     return (
         <div style={{ display: 'flex' }}>
             <CssBaseline />
+            <Toastr/>
             <NavBar />
             <SideBar></SideBar>
             <div style={{ width: '100%', textAlign: 'center' }}>

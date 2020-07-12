@@ -39,8 +39,7 @@ const Login = (props) => {
                     props.history.push('/viewUsers');
                 }
                 else {
-                    //alert('wrong username or password');
-                    // toastr.success('Success Message','', {displayDuration:3000});
+                    props.onCreateToastr('error', 'Wrong Username or Password');
                 }
             });
     }
@@ -91,6 +90,7 @@ const Login = (props) => {
 const mapDispatchToProps = dispatch => {
     return {
         onLoginToken: (token, username) => dispatch(actions.loginUser(username, token)),
+        onCreateToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }
 
