@@ -1,8 +1,12 @@
+import AddUser from './AddUser';
+import UpdateUser from './UpdateUser';
 import ViewUsers from './ViewUsers';
 import Login from './Login';
 
 export {
-    Login,
+    AddUser,
+    UpdateUser,
     ViewUsers,
+    Login,
 }
 
