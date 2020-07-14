@@ -6,7 +6,6 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-    console.log(action);
     if (action.type === actionsType.LOGIN) {
         return {
             ...state,
@@ -15,9 +14,11 @@ const reducer = (state = initialState, action) => {
         }
     }
     if (action.type === actionsType.LOGOUT) {
+        
         return {
             ...state,
             currentLogInToken: null,
+            currentLogInUser: '',
         }
     }
     return state;

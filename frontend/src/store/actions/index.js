@@ -1,5 +1,6 @@
 export {
     loginUser,
+    logoutUser,
     restoreUser,
 } from './users';
 

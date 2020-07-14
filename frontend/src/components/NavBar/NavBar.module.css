@@ -29,7 +29,7 @@ AD9BAA
 }
 
 .NavItems li:last-child{
-    margin-left: auto;
+    /* margin-left: auto; */
 }
 
 .NavItems a {
@@ -46,3 +46,4 @@ AD9BAA
     border-bottom: 4px solid #D9E9FC;
     color: white;
 }
+

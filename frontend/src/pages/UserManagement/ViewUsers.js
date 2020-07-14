@@ -8,6 +8,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import classes from './ViewUsers.module.css';
 import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
+
 const ViewUsers = (props) => {
     const [usersList, setUsers] = useState(null);
     const [page, setPage] = React.useState(0);
@@ -18,6 +20,9 @@ const ViewUsers = (props) => {
             axios.get('/api/admin/usersList')
                 .then(response => {
                     setUsers(response.data);
+                }).catch(error=>{
+                    console.log(error.response);
+                    props.createToastr('error', error.response.data);
                 });
         }
     });
@@ -30,7 +35,10 @@ const ViewUsers = (props) => {
         setPage(newPage);
     };
 
-    let rows = null, pagination = null; //To prevent reading thouse variable before fetching usersList from backend
+    let rows = (
+        <TableRow><TableCell align="center">Loading...</TableCell></TableRow>
+    );
+    let pagination = null; //To prevent reading thouse variable before fetching usersList from backend
     if (usersList != null) {
         rows = (rowsPerPage > 0
             ? usersList.userslist.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -64,7 +72,7 @@ const ViewUsers = (props) => {
         );
     }
 
-    console.log(props);
+
     return (
         <React.Fragment>
             <div className={classes.PageHeader}>
@@ -94,7 +102,7 @@ const ViewUsers = (props) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows}
+                            {rows}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -106,18 +114,13 @@ const ViewUsers = (props) => {
     )
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         ctr: state.counter
-//     };
-// }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIncrementCounter: () => dispatch({ type: "INC_COUNTER" })
+        createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }
 
 
-// export default connect(mapStateToProps, mapDispatchToProps)(ViewUsers);
-export default ViewUsers;
+export default connect(null, mapDispatchToProps)(ViewUsers);
+//export default ViewUsers;

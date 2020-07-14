@@ -4,7 +4,6 @@ import { Card, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import * as actionsType from '../../store/actions/actionTypes';
 import * as actions from '../../store/actions';
 //import classes from './Login.module.css';
 const Login = (props) => {

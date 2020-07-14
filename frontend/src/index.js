@@ -4,19 +4,33 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
-import { createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider, } from 'react-redux';
 import userReducer from './store/reducers/user';
 import layoutReducer from './store/reducers/layout';
 import thunk from 'redux-thunk';
+import axios from 'axios';
 
+
+//set default headers.
+axios.interceptors.request.use(request => {
+  const currentUserStr = localStorage.getItem("currentUser");
+  const currentUser = JSON.parse(currentUserStr);
+  if (currentUser && currentUser.token) {
+    request.headers.common['Authorization'] = 'Bearer '+ currentUser.token;
+  }
+  return request;
+}, error => {
+  console.log(error);
+  return Promise.reject(error);
+})
 
 const reducer = combineReducers({ user: userReducer, layout: layoutReducer });
 // const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, /* preloadedState, */ composeEnhancers(
-      applyMiddleware(thunk)
-    ));
+  applyMiddleware(thunk)
+));
 // const store = createStore(reducer, applyMiddleware(thunk));
 
 

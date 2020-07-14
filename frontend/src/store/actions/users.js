@@ -15,7 +15,7 @@ export const restoreUser = () => {
                 token: currentUser.token
             })
         }else{
-            dispatch({});
+            dispatch({type: '',});
         }
     }
 }
@@ -23,11 +23,17 @@ export const restoreUser = () => {
 export const loginUser = (username, token)=>{
     //save username and token to the localstorage
     const userInfo = JSON.stringify({username: username, token: token});
-    console.log('UserInfo', userInfo);
     localStorage.setItem('currentUser', userInfo);
     return {
         type: actionTypes.LOGIN,
         username: username,
         token: token,
+    }
+}
+
+export const logoutUser = ()=>{
+    localStorage.setItem('currentUser', null);
+    return {
+        type: actionTypes.LOGOUT,
     }
 }
