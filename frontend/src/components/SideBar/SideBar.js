@@ -43,7 +43,7 @@ const SideBar = (props) => {
                             <ListItemIcon><GroupIcon /></ListItemIcon>
                             <ListItemText primary='All Users'/>
                         </ListItem>
-                        <ListItem button onClick={()=>{props.history.push('/addUser')}}>
+                        <ListItem button onClick={()=>{props.history.push('/createUser')}}>
                             <ListItemIcon><PersonAddIcon /></ListItemIcon>
                             <ListItemText primary='Create User'></ListItemText>
                         </ListItem>
