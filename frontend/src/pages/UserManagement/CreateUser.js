@@ -1,51 +1,43 @@
 import React from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core';
-import TablePagination from '@material-ui/core/TablePagination';
-import AddIcon from '@material-ui/icons/Add';
+import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-
 const CreateUser = (props) => {
     const [form, setForm] = React.useState({
         username: null,
         password: null,
+        lastname: null,
+        firstname: null,
+        email: null,
+        phone: null,
+        address: null,
+        title: null,
+        role: null,
+        permission: null,
     });
-
     const onChangeHandler = (event) => {
         let updatedForm = { ...form };
-        if (event.target.label === 'UserName') {
-            updatedForm.username = event.target.value;
-        } else if (event.target.id === 'loginPw') {
-            updatedForm.password = event.target.value;
-        }
-        console.log(updatedForm);
+        updatedForm[event.target.id] = event.target.value;
         setForm(updatedForm);
     }
     const onSubmitHandler = (event) => {
-        console.log(event);
         //validate
         if (!form.username || !form.password) {
+            props.createToastr('error', 'Required fields are not filled');
             return;
         }
         //send login info validation to API
-        axios.post('/api/login', { ...form })
+        axios.post('/api/admin/createUser', { ...form })
             .then(response => {
-                console.log(response.data);
-                if (response.data.userToken) {
-                    // get JWT token from backend
-                    // and save this token to redux
-                    props.onLoginToken(response.data.userToken, form.username);
-                    props.history.push('/viewUsers');
-                }
-                else {
-                    props.onCreateToastr('error', 'Wrong Username or Password');
-                }
+                props.createToastr(response.data);
+                props.history.push('/viewUsers');
+            }).catch(error => {
+                props.createToastr('error', error.response.data);
             });
     }
     const useStyles = makeStyles((theme) => ({
@@ -54,119 +46,144 @@ const CreateUser = (props) => {
             height: 'auto',
             margin: '20px auto',
             padding: '30px',
-            // display: 'flex',
-            // flexDirection: 'column',
-            // alignItems: 'center',
-            
         },
         form: {
-            '& > *': {
-                margin: theme.spacing(1),
-                width: '25ch',
-            },
+            width: '600px',
+            margin: '0 auto',
         },
-
-        marginTop: {
-            // marginTop: '20px',
+        textField: {
+            margin: theme.spacing(1),
+            width: '30ch',
+        },
+        button: {
+            marginRight: '20px',
+            float: 'right',
+        },
+        pageHeader: {
+            display: 'flex',
+            height: '100px',
+            padding: '20px',
+            alignItems: 'center',
+            backgroundColor: '#D9E9FC',
+        },
+        icon: {
+            width: '60px',
+            height: '60px',
+            backgroundColor: '#ECF4FD',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '5px',
+            marginRight: '20px',
         }
     }));
     const classes = useStyles();
     return (
-        <div>
+        <React.Fragment>
+            <div className={classes.pageHeader}>
+                <div className={classes.icon}>
+                    <GroupIcon />
+                </div>
+                <h2>Create Users</h2>
+            </div>
             <Card className={classes.card}>
                 <form className={classes.form}>
                     <TextField
+                        className={classes.textField}
                         required
-                        id="UserName"
+                        id="username"
                         label="UserName"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="FirstName"
+                        className={classes.textField}
+                        id="firstname"
                         label="FirstName"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                     <TextField
                         required
-                        className={classes.marginTop}
-                        id="LastName"
-                        label="LastName"
-                        onChange={onChangeHandler}
-                        variant="outlined"
-                    />
-                    <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Password"
+                        className={classes.textField}
+                        id="password"
                         label="Password"
                         onChange={onChangeHandler}
                         variant="outlined"
                         type='password'
                     />
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Email"
+                        className={classes.textField}
+                        id="lastname"
+                        label="LastName"
+                        onChange={onChangeHandler}
+                        variant="outlined"
+                    />
+                    <TextField
+                        className={classes.textField}
+                        id="email"
                         label="Email"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
+
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Address"
-                        label="Address"
-                        onChange={onChangeHandler}
-                        variant="outlined"
-                    />
-                    <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Role"
+                        className={classes.textField}
+                        id="role"
                         label="Role"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Phone"
+                        className={classes.textField}
+                        id="phone"
                         label="Phone"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Permission"
-                        label="Permission"
+                        className={classes.textField}
+                        id="title"
+                        label="Title"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                     <TextField
-                        required
-                        className={classes.marginTop}
-                        id="Role"
-                        label="Role"
+                        style={{ margin: '8px', width: '62.2ch', }}
+                        id="address"
+                        label="Address"
+                        onChange={onChangeHandler}
+                        variant="outlined"
+                    />
+                    <TextField
+                        style={{ margin: '8px', width: '62.2ch', }}
+                        id="permission"
+                        label="Permission"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
                 </form>
-
+                <Button
+                    variant="contained"
+                    onClick={()=>{props.history.push('/viewUsers')}}
+                    style={{ marginLeft: '303px', marginRight: '20px' }}
+                    color="primary">
+                    Cancel
+                </Button>
                 <Button
                     variant="contained"
                     onClick={onSubmitHandler}
-                    className={classes.marginTop} color="primary">
-                    Log In
+                    color="primary">
+                    Save
                 </Button>
             </Card>
-        </div>
+        </React.Fragment>
     );
 };
 
-
-export default CreateUser;
+const mapDispatchToProps = dispatch => {
+    return {
+        createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
+    }
+}
+export default connect(null, mapDispatchToProps)(CreateUser);

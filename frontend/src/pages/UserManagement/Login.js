@@ -38,8 +38,11 @@ const Login = (props) => {
                     props.history.push('/viewUsers');
                 }
                 else {
-                    props.onCreateToastr('error', 'Wrong Username or Password');
+                    props.createToastr('error', 'Wrong Username or Password');
                 }
+            })
+            .catch(error => {
+                props.createToastr('error', error.response.data);
             });
     }
     const useStyles = makeStyles((theme) => ({
@@ -89,7 +92,7 @@ const Login = (props) => {
 const mapDispatchToProps = dispatch => {
     return {
         onLoginToken: (token, username) => dispatch(actions.loginUser(username, token)),
-        onCreateToastr: (type, message) => dispatch(actions.createToastr(type, message)),
+        createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }
 

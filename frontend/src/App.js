@@ -2,11 +2,11 @@ import React from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 
-<<<<<<< HEAD
-import { ViewUsers, Login, CreateUser } from './pages/UserManagement/index';
-=======
-import { AddUser, UpdateUser, ViewUsers, Login } from './pages/UserManagement/index';
->>>>>>> c58983b405af17e8d7bee0194583cd3d07efad18
+
+import { CreateUser } from './pages/UserManagement/index';
+
+import {  UpdateUser, ViewUsers, Login } from './pages/UserManagement/index';
+
 import Layout from './components/Layout/Layout';
 
 function App() {
@@ -17,12 +17,9 @@ function App() {
           <Route path='/' exact component={Login} />
           <Route path='/viewUsers' component={ViewUsers}>
           </Route>
-<<<<<<< HEAD
-          <Route path='/createUser' component={CreateUser}>
-=======
-          <Route path='/addUser' component={AddUser}>
->>>>>>> c58983b405af17e8d7bee0194583cd3d07efad18
-          </Route>
+          <Route path='/createUser' component={CreateUser}></Route>
+          {/* <Route path='/addUser' component={AddUser}>
+          </Route> */}
           <Route path='/updateUser' component={UpdateUser}>
           </Route>
         </Switch>
