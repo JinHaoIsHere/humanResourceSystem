@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
                 toastList: updateList,
             }
         case actionTypes.REMOVE_TOAST:
-            const updatedList = state.toastList.filter((item)=>item.id!=action.id);
+            const updatedList = state.toastList.filter((item)=>item.id!==action.id);
             return {
                 ...state,
                 toastList: updatedList,

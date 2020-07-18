@@ -17,7 +17,7 @@ axios.interceptors.request.use(request => {
   const currentUserStr = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserStr);
   if (currentUser && currentUser.token) {
-    request.headers.common['Authorization'] = 'Bearer '+ currentUser.token;
+    request.headers.common['Authorization'] = 'Bearer ' + currentUser.token;
   }
   return request;
 }, error => {
@@ -25,7 +25,10 @@ axios.interceptors.request.use(request => {
   return Promise.reject(error);
 })
 
-const reducer = combineReducers({ user: userReducer, layout: layoutReducer });
+const reducer = combineReducers({
+  user: userReducer,
+  layout: layoutReducer
+});
 // const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, /* preloadedState, */ composeEnhancers(

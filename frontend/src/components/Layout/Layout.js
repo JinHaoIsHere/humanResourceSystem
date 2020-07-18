@@ -3,7 +3,7 @@ import NavBar from '../NavBar/NavBar';
 import SideBar from '../SideBar/SideBar';
 import { CssBaseline, Toolbar } from '@material-ui/core';
 import { connect } from 'react-redux';
-import * as acitons from '../../store/actions';
+import * as actions from '../../store/actions';
 import Toastr from '../Toastr/Toastr';
 //This component basically contains navBar SideBar and Footer. Could wrap the entire application
 // To be implemented features:
@@ -14,6 +14,7 @@ const Layout = (props) => {
     useEffect(() => {
         //console.log(props);
         props.retoreUserInfo();
+        props.fetchUserList();
     });
 
     return (
@@ -32,7 +33,8 @@ const Layout = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        retoreUserInfo: () => dispatch(acitons.restoreUser()),
+        retoreUserInfo: () => dispatch(actions.restoreUser()),
+        fetchUserList: () => dispatch(actions.fetchUserList()),
     }
 }
 export default connect(null, mapDispatchToProps)(Layout);

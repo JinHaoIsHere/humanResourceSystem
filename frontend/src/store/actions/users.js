@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-
+import axios from 'axios';
 
 export const restoreUser = () => {
     return dispatch => {
@@ -35,5 +35,15 @@ export const logoutUser = ()=>{
     localStorage.setItem('currentUser', null);
     return {
         type: actionTypes.LOGOUT,
+    }
+}
+
+export const fetchUserList=()=>{
+    return dispatch=>{
+        axios.get('/api/admin/usersList')
+        .then(res=>{
+            console.log(res.data);
+            dispatch({type: actionTypes.SET_USERS_LIST, usersList: res.data.userslist})
+        })
     }
 }
