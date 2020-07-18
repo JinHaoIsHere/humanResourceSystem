@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var contractRouter = require('./routes/contract');
 var cors = require('cors');
 var expressJWT = require('express-jwt');
 var app = express();
@@ -35,5 +36,6 @@ app.use(function (err, req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/api', usersRouter);
+app.use('/api', contractRouter);
 
 module.exports = app;

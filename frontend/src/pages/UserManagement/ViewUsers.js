@@ -11,20 +11,20 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 
 const ViewUsers = (props) => {
-    const [usersList, setUsers] = useState(null);
+    // const [usersList, setUsers] = useState(null);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     useEffect(() => {
-        if (usersList === null) {
-            axios.get('/api/admin/usersList')
-                .then(response => {
-                    setUsers(response.data);
-                }).catch(error=>{
-                    console.log(error.response);
-                    props.createToastr('error', error.response.data);
-                });
-        }
+        // if (usersList === null) {
+        //     axios.get('/api/admin/usersList')
+        //         .then(response => {
+        //             setUsers(response.data);
+        //         }).catch(error=>{
+        //             console.log(error.response);
+        //             props.createToastr('error', error.response.data);
+        //         });
+        // }
     });
 
     const handleChangeRowsPerPage = (event) => {
@@ -39,10 +39,10 @@ const ViewUsers = (props) => {
         <TableRow><TableCell align="center">Loading...</TableCell></TableRow>
     );
     let pagination = null; //To prevent reading thouse variable before fetching usersList from backend
-    if (usersList != null) {
+    if (props.usersList != null) {
         rows = (rowsPerPage > 0
-            ? usersList.userslist.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : usersList.userslist
+            ? props.usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : props.usersList
         ).map((user) => {
             const perm = Array.isArray(user.permission) ? user.permission.join(', ') : '';
             return (
@@ -63,7 +63,7 @@ const ViewUsers = (props) => {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={usersList.userslist.length}
+                count={props.usersList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -102,7 +102,7 @@ const ViewUsers = (props) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {rows}
+                                {rows}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -114,13 +114,18 @@ const ViewUsers = (props) => {
     )
 }
 
-
+const mapStateToProps = state => {
+    return {
+        usersList: state.user.usersList,
+    }
+}
 const mapDispatchToProps = dispatch => {
     return {
         createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
+
     }
 }
 
 
-export default connect(null, mapDispatchToProps)(ViewUsers);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewUsers);
 //export default ViewUsers;

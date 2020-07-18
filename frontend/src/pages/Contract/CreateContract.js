@@ -41,8 +41,9 @@ const CreateContract = (props) => {
         //validate
 
         //send login info validation to API
-        axios.post('/api/admin/createUser', { ...form })
+        axios.post('/api/contract/create', { ...form })
             .then(response => {
+                //console.log(response)
                 props.createToastr(response.data);
                 props.history.push('/viewUsers');
             }).catch(error => {
