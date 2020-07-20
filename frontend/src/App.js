@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import { Route, Switch } from 'react-router-dom';
-
+import { Route, Switch, Redirect } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 
 
 import { Login, UpdateUser, ViewUsers, CreateUser } from './pages/UserManagement/index';
@@ -14,11 +14,12 @@ function App() {
     <div className="App">
       <Layout>
         <Switch>
-          <Route path='/' exact component={Login} />
-          <Route path='/viewUsers' component={ViewUsers} />
-          <Route path='/createUser' component={CreateUser} />
-          <Route path='/updateUser' component={UpdateUser} />
-          <Route path='/createContract' component={CreateContract} />
+          <Route path='/login' exact component={Login} />
+          <PrivateRoute path='/viewUsers' component={ViewUsers} />
+          <PrivateRoute path='/createUser' component={CreateUser} />
+          <PrivateRoute path='/updateUser' component={UpdateUser} />
+          <PrivateRoute path='/createContract' component={CreateContract} />
+          <Redirect to='/login' />
         </Switch>
       </Layout>
     </div>

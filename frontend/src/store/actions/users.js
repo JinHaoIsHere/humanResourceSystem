@@ -13,7 +13,8 @@ export const restoreUser = () => {
             dispatch({
                 type: actionTypes.LOGIN,
                 username: currentUser.username,
-                token: currentUser.token
+                token: currentUser.token,
+                permission: currentUser.permission,
             })
         } else {
             dispatch({ type: '', });
@@ -21,13 +22,14 @@ export const restoreUser = () => {
     }
 }
 
-export const loginUser = (username, token) => {
+export const loginUser = (username, token, permission=[]) => {
     //save username and token to the localstorage
-    const userInfo = JSON.stringify({ username: username, token: token });
+    const userInfo = JSON.stringify({ username: username, token: token, permission: permission });
     localStorage.setItem('currentUser', userInfo);
     return {
         type: actionTypes.LOGIN,
         username: username,
+        permission: permission,
         token: token,
     }
 }
@@ -47,11 +49,6 @@ export const fetchUserList = () => {
                 dispatch({ type: actionTypes.SET_USERS_LIST, usersList: res.data.userslist })
             })
             .catch(err => {
-                // const id = Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-                // dispatch({type: actionTypes.ADD_TOAST, toast: {type: 'error', message: err.response.data, id: id}});
-                // setTimeout(()=>{
-                //     dispatch({type: actionTypes.REMOVE_TOAST, id: id});
-                // }, 3000);
                 createToastrHelper(dispatch, 'error', err.response.data);
             })
     }

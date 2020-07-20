@@ -26,10 +26,12 @@ router.post(
         }
         // console.log(result);
         let token = null;
+        let perm = [];
         if (result) {
             token = auth.sign(result);
+            perm = result.permission;
         }
-        res.json({ userToken: token });
+        res.json({ userToken: token, permission: perm });
     }
 );
 

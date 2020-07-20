@@ -3,6 +3,7 @@ import * as actionsType from '../actions/actionTypes';
 const initialState = {
     currentLogInToken: null,
     currentLogInUser: '',
+    currentLogInUserPerm: [],
     usersList: null,
 }
 
@@ -13,12 +14,14 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 currentLogInToken: action.token,
                 currentLogInUser: action.username,
+                currentLogInUserPerm: action.permission,
             }
         case actionsType.LOGOUT:
             return {
                 ...state,
                 currentLogInToken: null,
                 currentLogInUser: '',
+                currentLogInUserPerm: []
             }
         case actionsType.SET_USERS_LIST:
             return {

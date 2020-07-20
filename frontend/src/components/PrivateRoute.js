@@ -1,0 +1,23 @@
+import React from 'react';
+import { Route, Redirect } from 'react-router-dom';
+// import { isLogin } from '../utils';
+import { connect } from 'react-redux';
+const PrivateRoute = (props) => {
+
+    console.log(props.currentUser);
+    if (props.currentUser) {
+        return (
+            <Route {...props} />
+        )
+    } else {
+        return null
+    }
+};
+
+const mapStateToProps = state => {
+    return {
+        currentUser: state.user.currentLogInUser
+    }
+}
+
+export default connect(mapStateToProps)(PrivateRoute);

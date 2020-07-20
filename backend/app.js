@@ -21,14 +21,13 @@ app.use(expressJWT({
     secret: auth.publicKey,
     algorithms: ['RS256']
 }).unless({
-    path: ['/api/login']
+    path: ['/api/login', '/favicon.ico']
 }));
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
         res.status(401).send('Unauthorized: invalid token...');
     }
 });
-
 // app.use((req, res, next) => { //not completed yet
 //     req.db = db;
 //     next();
