@@ -14,7 +14,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListIcon from '@material-ui/icons/List';
 import myclasses from './SideBar.module.css';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 const SideBar = (props) => {
     const drawerWidth = 240;
     const useStyles = makeStyles((theme) => ({
@@ -27,6 +27,38 @@ const SideBar = (props) => {
         }
     }));
     const classes = useStyles();
+
+    const currentPath = props.history.location.pathname;
+    console.log(currentPath);
+    let listItems = null;
+    if (currentPath === '/viewUsers' || currentPath === '/createUser') {
+        listItems = (
+            <React.Fragment>
+                <ListItem button onClick={() => { props.history.push('/viewUsers') }}>
+                    <ListItemIcon><GroupIcon /></ListItemIcon>
+                    <ListItemText primary='All Users' />
+                </ListItem>
+                <ListItem button onClick={() => { props.history.push('/createUser') }}>
+                    <ListItemIcon><PersonAddIcon /></ListItemIcon>
+                    <ListItemText primary='Create User'></ListItemText>
+                </ListItem>
+            </React.Fragment>
+        );
+    }
+    else if(currentPath==='/viewContracts' || currentPath==='/createContract'){
+        listItems = (
+            <React.Fragment>
+                <ListItem button onClick={() => { props.history.push('/viewContracts') }}>
+                    <ListItemIcon><GroupIcon /></ListItemIcon>
+                    <ListItemText primary='All Contracts' />
+                </ListItem>
+                <ListItem button onClick={() => { props.history.push('/createContract') }}>
+                    <ListItemIcon><PersonAddIcon /></ListItemIcon>
+                    <ListItemText primary='Create Contract'></ListItemText>
+                </ListItem>
+            </React.Fragment>
+        );
+    }
     return (
         <div>
             <Drawer
@@ -39,14 +71,7 @@ const SideBar = (props) => {
                 <Toolbar />
                 <div className={myclasses.DrawerContainer}>
                     <List>
-                        <ListItem button onClick={()=>{props.history.push('/viewUsers')}}>
-                            <ListItemIcon><GroupIcon /></ListItemIcon>
-                            <ListItemText primary='All Users'/>
-                        </ListItem>
-                        <ListItem button onClick={()=>{props.history.push('/createUser')}}>
-                            <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                            <ListItemText primary='Create User'></ListItemText>
-                        </ListItem>
+                        {listItems}
                     </List>
                     <Divider />
                     <List>

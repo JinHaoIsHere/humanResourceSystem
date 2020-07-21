@@ -15,11 +15,13 @@ function App() {
       <Layout>
         <Switch>
           <Route path='/login' exact component={Login} />
+          <Route path='/' exact>HOME PAGE</Route>
           <PrivateRoute path='/viewUsers' component={ViewUsers} />
           <PrivateRoute path='/createUser' component={CreateUser} />
           <PrivateRoute path='/updateUser' component={UpdateUser} />
+          <PrivateRoute path='/viewContracts'>View Contracts</PrivateRoute>
           <PrivateRoute path='/createContract' component={CreateContract} />
-          <Redirect to='/login' />
+          <Redirect to='/404' />
         </Switch>
       </Layout>
     </div>

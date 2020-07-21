@@ -69,7 +69,8 @@ const NavBar = (props) => {
                     <img src={logoImg} alt='logo' style={{ width: '170px' }}></img>
                     <ul className={myclasses.NavItems}>
                         <li><Link to="/" > HOME </Link></li>
-                        <li><Link to="/viewUsers" > USERS </Link></li>
+                        {props.currentUserPerm.length>0 ? <li><Link to="/viewContracts" > CONTRACT </Link></li> : null}
+                        {props.currentUserPerm.length>0 ? <li><Link to="/viewUsers" > USERS </Link></li> : null}
                     </ul>
 
                     <div style={{

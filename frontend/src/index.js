@@ -11,6 +11,7 @@ import layoutReducer from './store/reducers/layout';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
+import {restoreUser} from './store/actions/users';
 
 //set default headers.
 axios.interceptors.request.use(request => {
@@ -36,7 +37,7 @@ const store = createStore(reducer, /* preloadedState, */ composeEnhancers(
 ));
 // const store = createStore(reducer, applyMiddleware(thunk));
 
-
+store.dispatch(restoreUser());
 
 //React 在 strict mode 下会刻意执行两次渲染，以防止组件内有什么 side effect 引起 bug，提前预防。
 ReactDOM.render(

@@ -13,15 +13,18 @@ const Layout = (props) => {
 
     useEffect(() => {
         //console.log(props);
-        props.retoreUserInfo();
-        props.fetchUserList();
+        // props.retoreUserInfo();
+        if(props.currentUser){
+            props.fetchUserList();
+        }
+        
     });
 
     return (
         <div style={{ display: 'flex' }}>
             <CssBaseline />
             <Toastr/>
-            <NavBar />
+            <NavBar currentUserPerm={props.currentUserPerm}/>
             <SideBar></SideBar>
             <div style={{ width: '100%', textAlign: 'center' }}>
                 <Toolbar />
@@ -31,10 +34,18 @@ const Layout = (props) => {
     );
 }
 
+const mapStateToProps = state => {
+    return {
+        currentUser: state.user.currentLogInUser,
+        currentUserPerm: state.user.currentLogInUserPerm
+    }
+}
+
+
 const mapDispatchToProps = dispatch => {
     return {
         retoreUserInfo: () => dispatch(actions.restoreUser()),
         fetchUserList: () => dispatch(actions.fetchUserList()),
     }
 }
-export default connect(null, mapDispatchToProps)(Layout);
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core';
 import TablePagination from '@material-ui/core/TablePagination';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,18 +14,6 @@ const ViewUsers = (props) => {
     // const [usersList, setUsers] = useState(null);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-    useEffect(() => {
-        // if (usersList === null) {
-        //     axios.get('/api/admin/usersList')
-        //         .then(response => {
-        //             setUsers(response.data);
-        //         }).catch(error=>{
-        //             console.log(error.response);
-        //             props.createToastr('error', error.response.data);
-        //         });
-        // }
-    });
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));

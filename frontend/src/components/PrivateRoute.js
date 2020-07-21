@@ -7,10 +7,11 @@ const PrivateRoute = (props) => {
     console.log(props.currentUser);
     if (props.currentUser) {
         return (
-            <Route {...props} />
+        <Route {...props}>{props.children}</Route>
         )
     } else {
-        return null
+        return (<Route render={()=><Redirect to='login'/>}
+             />)
     }
 };
 
