@@ -34,7 +34,7 @@ const ViewUsers = (props) => {
         ).map((user) => {
             const perm = Array.isArray(user.permission) ? user.permission.join(', ') : '';
             return (
-                <TableRow key={user._id}>
+                <TableRow key={user._id} onClick={()=>{props.history.push('/updateUser/'+user._id)}}>
                     <TableCell align="center">{user.username}</TableCell>
                     <TableCell align="center">{user.firstname}</TableCell>
                     <TableCell align="center">{user.lastname}</TableCell>
@@ -70,7 +70,7 @@ const ViewUsers = (props) => {
                 <h2>View Users</h2>
                 <Button variant="contained"
                     color="primary" style={{ marginLeft: 'auto' }}
-                    onClick={() => { props.history.push('/addUser') }}><AddIcon /></Button>
+                    onClick={() => { props.history.push('/createUser') }}><AddIcon /></Button>
             </div>
             <Card className={classes.Card}>
                 <CardContent>

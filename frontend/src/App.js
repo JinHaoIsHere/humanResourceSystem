@@ -18,7 +18,7 @@ function App() {
           <Route path='/' exact>HOME PAGE</Route>
           <PrivateRoute path='/viewUsers' component={ViewUsers} />
           <PrivateRoute path='/createUser' component={CreateUser} />
-          <PrivateRoute path='/updateUser' component={UpdateUser} />
+          <PrivateRoute path='/updateUser/:id' component={UpdateUser} />
           <PrivateRoute path='/viewContracts'>View Contracts</PrivateRoute>
           <PrivateRoute path='/createContract' component={CreateContract} />
           <Redirect to='/404' />

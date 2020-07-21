@@ -21,6 +21,7 @@ import Select from '@material-ui/core/Select';
 const CreateContract = (props) => {
 
     const [form, setForm] = React.useState({
+        contractName: '',
         employer: null,
         employee: '',
         startDate: null,
@@ -34,19 +35,37 @@ const CreateContract = (props) => {
         } else {
             updatedForm[event.target.name] = event.target.value;
         }
-        console.log(updatedForm);
         setForm(updatedForm);
     }
     const onSubmitHandler = (event) => {
         //validate
+        let pass = true;
+        if (!form.contractName) {
+            props.createToastr('error', 'Contract Name is required');
+            pass = false;
+        }
+        if (!form.employee) {
+            props.createToastr('error', 'Employee Name is required');
+            pass = false;
+        }
+        if (!form.startDate || !form.endDate) {
+            props.createToastr('error', 'Contract Date is required');
+            pass = false;
+        }else if(form.startDate.getTime()> form.endDate.getTime()){
+            props.createToastr('error', 'Contract Date is wrong');
+            pass = false;
+        }
+        if(!pass)
+            return;
 
         //send login info validation to API
         axios.post('/api/contract/create', { ...form })
             .then(response => {
-                //console.log(response)
-                props.createToastr(response.data);
-                props.history.push('/viewUsers');
-            }).catch(error => {
+                props.createToastr('success', response.data);
+                props.history.push('/viewContracts');
+            })
+            .catch(error => {
+                //console.log(error.response);
                 props.createToastr('error', error.response.data);
             });
     }
@@ -110,6 +129,13 @@ const CreateContract = (props) => {
             </div>
             <Card className={classes.card}>
                 <form className={classes.form}>
+                    <TextField
+                        style={{ margin: '8px', width: '62.2ch', }}
+                        name="contractName"
+                        label="Contract Name"
+                        onChange={onChangeHandler}
+                        variant="outlined"
+                    />
                     <FormControl variant="outlined" className={classes.textField}>
                         <InputLabel id="employee-select-outlined-label">Employee</InputLabel>
                         <Select
@@ -193,6 +219,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchUserList: () => dispatch(actions.fetchUserList),
+        createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }
 

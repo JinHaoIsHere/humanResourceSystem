@@ -7,6 +7,13 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import permissions from '../../utils/permissions';
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const CreateUser = (props) => {
     const [form, setForm] = React.useState({
         username: null,
@@ -25,6 +32,11 @@ const CreateUser = (props) => {
         updatedForm[event.target.id] = event.target.value;
         setForm(updatedForm);
     }
+    const onPermChangeHandler=(event, newValue)=>{
+        let updatedForm = { ...form };
+        updatedForm.permission = newValue;
+        setForm(updatedForm);
+    }
     const onSubmitHandler = (event) => {
         //validate
         if (!form.username || !form.password) {
@@ -34,8 +46,9 @@ const CreateUser = (props) => {
         //send login info validation to API
         axios.post('/api/admin/createUser', { ...form })
             .then(response => {
-                props.createToastr(response.data);
+                props.createToastr('success', response.data);
                 props.history.push('/viewUsers');
+                props.fetchUserList();
             }).catch(error => {
                 props.createToastr('error', error.response.data);
             });
@@ -78,6 +91,8 @@ const CreateUser = (props) => {
         }
     }));
     const classes = useStyles();
+    const permissionOptions = Object.keys(permissions);
+    
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
@@ -155,12 +170,29 @@ const CreateUser = (props) => {
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
-                    <TextField
-                        style={{ margin: '8px', width: '62.2ch', }}
-                        id="permission"
-                        label="Permission"
-                        onChange={onChangeHandler}
-                        variant="outlined"
+                    <Autocomplete
+                        style={{ margin: '8px auto', width: '62.2ch', }}
+                        multiple
+                        id="checkboxes-tags-demo"
+                        options={permissionOptions}
+                        onChange={onPermChangeHandler}
+                        disableCloseOnSelect
+                        // getOptionLabel={(option) => option.title}
+                        // getOptionSelected={(option, value) => option.value === value.value}
+                        renderOption={(option, { selected }) => (
+                            <React.Fragment>
+                                <Checkbox
+                                    icon={icon}
+                                    checkedIcon={checkedIcon}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {option}
+                            </React.Fragment>
+                        )}
+                        renderInput={(params) => (
+                            <TextField {...params} variant="outlined" label="Permissions" placeholder="Permission" />
+                        )}
                     />
                 </form>
                 <Button
@@ -184,6 +216,7 @@ const CreateUser = (props) => {
 const mapDispatchToProps = dispatch => {
     return {
         createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
+        fetchUserList: () => dispatch(actions.fetchUserList()),
     }
 }
 export default connect(null, mapDispatchToProps)(CreateUser);

@@ -1,171 +1,243 @@
+import React, {useEffect} from 'react';
 import axios from 'axios';
-import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import FromControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
+import GroupIcon from '@material-ui/icons/Group';
+import Card from '@material-ui/core/Card';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-// import User from '../UserManagement/User/User'
+import { makeStyles } from '@material-ui/core/styles';
+
+import Checkbox from '@material-ui/core/Checkbox';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import permissions from '../../utils/permissions';
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const UpdateUser = (props) => {
-    const [attributesState,setAttributesState] = useState({
-        attributes: [
-            {name: 'User Name', detail: ''},
-            {name: 'First Name', detail: ''},
-            {name: 'Email', detail: ''},
-            {name: 'Last Name', detail: ''},
-            {name: 'Password', detail: ''},
-            {name: 'Title', detail: ''},
-            {name: 'Permission', detail: ''},
-            {name: 'Phone', detail: ''},
-            {name: 'Role', detail: ''},
-            {name: 'Address', detail: ''},
-        ]
-    });
-
-    const [otherState, setOtherState] = useState('Invalid');
-
-    const permissions = [
-        {name: 'a'},
-        {name: 'b'},
-        {name: 'c'},
-    ];
-
-    const roles = [
-        {name: 'Admin'},
-        {name: 'Manager'},
-        {name: 'Employee'}
-    ];
-
-    const onChangeHandler = (event) => {
-        let updatedAttributesState = {...attributesState};
-        for (let i=0; i<10; i++) {
-            updatedAttributesState.attributes[i].detail = event.target.value;
-        }
-        setAttributesState(updatedAttributesState);
-    };
-
-    const onSubmitHandler = (event) => {
-        console.log(event);
-        for (let i=0; i<10; i+=2) {
-            if (!attributesState.attributes[i].detail) {
-                alert('Please fill in all the required fields!');
-                break;
-            }
-        };
-        for (let i=0; i<10; i++) {
-            axios.post('/updateUser', {...attributesState.attributes[i].detail})
+    const [form, setForm] = React.useState(null);
+    const userId = props.match.params.id;
+    useEffect(() => {
+        axios.get('/api/admin/getUser?id='+userId)
             .then(response => {
-               console.log(response.data);
+                const updatedForm = { ...response.data.user, password: ''};
+                console.log(updatedForm);
+                setForm(updatedForm);
             })
-            .catch(error => {
-                console.log(error);
+            .catch(error=>{
+                props.createToastr('error', error.response.data);
             });
+    }, []);
+    
+    const onChangeHandler = (event) => {
+        let updatedForm = { ...form };
+        updatedForm[event.target.id] = event.target.value;
+        setForm(updatedForm);
+    }
+    const onPermChangeHandler=(event, newValue)=>{
+        let updatedForm = { ...form };
+        updatedForm.permission = newValue;
+        setForm(updatedForm);
+    }
+    const onSubmitHandler = (event) => {
+        //validate
+        if (!form.username) {
+            props.createToastr('error', 'Required fields are not filled');
+            return;
         }
-    };
 
-    const onDeleteHandler = (event) => {
-        let updatedAttributesState = {...attributesState};
-        for (let i=0; i<10; i++) {
-            updatedAttributesState.attributes[i].detail = null;
-        }
-        setAttributesState(updatedAttributesState);
-    };
+        console.log(form);
 
+        //send login info validation to API
+        axios.post('/api/admin/updateUser', { ...form })
+            .then(response => {
+                props.createToastr('success',response.data);
+                props.history.push('/viewUsers');
+                props.fetchUserList();
+            }).catch(error => {
+                props.createToastr('error', error.response.data);
+            });
+    }
     const useStyles = makeStyles((theme) => ({
-        appBar: {
-          position: 'relative',
+        card: {
+            width: '1000px',
+            height: 'auto',
+            margin: '20px auto',
+            padding: '30px',
         },
-        layout: {
-          width: 'auto',
-          marginLeft: theme.spacing(2),
-          marginRight: theme.spacing(2),
-          [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          },
+        form: {
+            width: '600px',
+            margin: '0 auto',
         },
-        paper: {
-          marginTop: theme.spacing(3),
-          marginBottom: theme.spacing(3),
-          padding: theme.spacing(2),
-          [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(3),
-            // marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-          },
-        },
-        buttons: {
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginTop: theme.spacing(3),
-          marginLeft: theme.spacing(1),
+        textField: {
+            margin: theme.spacing(1),
+            width: '30ch',
         },
         button: {
-          marginTop: theme.spacing(3),
-          marginLeft: theme.spacing(1),
+            marginRight: '20px',
+            float: 'right',
         },
-      }));
-
+        pageHeader: {
+            display: 'flex',
+            height: '100px',
+            padding: '20px',
+            alignItems: 'center',
+            backgroundColor: '#D9E9FC',
+        },
+        icon: {
+            width: '60px',
+            height: '60px',
+            backgroundColor: '#ECF4FD',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '5px',
+            marginRight: '20px',
+        }
+    }));
     const classes = useStyles();
+    const permissionOptions = Object.keys(permissions);
 
+    let userForm=null;
+    if(form){
+        userForm=(<form className={classes.form}>
+            <TextField
+                className={classes.textField}
+                required
+                id="username"
+                label="UserName"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.username}
+            />
+            <TextField
+                className={classes.textField}
+                id="firstname"
+                label="FirstName"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.firstname}
+            />
+            <TextField
+                className={classes.textField}
+                id="password"
+                label="Password"
+                onChange={onChangeHandler}
+                variant="outlined"
+                type='password'
+                value={form.password}
+                helperText="Leave it black to keep old password"
+            />
+            <TextField
+                className={classes.textField}
+                id="lastname"
+                label="LastName"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.lastname}
+            />
+            <TextField
+                className={classes.textField}
+                id="email"
+                label="Email"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.email}
+            />
+
+            <TextField
+                className={classes.textField}
+                id="role"
+                label="Role"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.role}
+            />
+            <TextField
+                className={classes.textField}
+                id="phone"
+                label="Phone"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.phone}
+            />
+            <TextField
+                className={classes.textField}
+                id="title"
+                label="Title"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.title}
+            />
+            <TextField
+                style={{ margin: '8px', width: '62.2ch', }}
+                id="address"
+                label="Address"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.address}
+            />
+            <Autocomplete
+                style={{ margin: '8px auto', width: '62.2ch', }}
+                multiple
+                id="checkboxes-tags-demo"
+                options={permissionOptions}
+                onChange={onPermChangeHandler}
+                disableCloseOnSelect
+                // getOptionLabel={(option) => option.title}
+                // getOptionSelected={(option, value) => option.value === value.value}
+                renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                        <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                        />
+                        {option}
+                    </React.Fragment>
+                )}
+                renderInput={(params) => (
+                    <TextField {...params} variant="outlined" label="Permissions" placeholder="Permission" />
+                )}
+               value={form.permission}
+            />
+        </form>)
+    }
     return (
         <React.Fragment>
-            <Typography variant="h6" gutterBottom className={classes.appbar}>Update a User</Typography>
-            <Grid container spacing={3} className={classes.layout}>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField required id="username" label={attributesState.attributes[0].name} fullWidth autoComplete="username"/>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField id="firstname" label={attributesState.attributes[1].name} fullWidth autoComplete="firstname"/>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField required id="email" label={attributesState.attributes[2].name} fullWidth autoComplete="email"/>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField id="lastname" label={attributesState.attributes[3].name} fullWidth autoComplete="lastname"/>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField required id="password" label={attributesState.attributes[4].name} fullWidth autoComplete="password"/>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField id="title" label={attributesState.attributes[5].name} fullWidth autoComplete="title"/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                   <Autocomplete multiple limitTags={3} id="permission" options={permissions} getOptionLabel={(option) => option.name} defaultValue={[permissions[0], permissions[1], permissions[2]]} renderInput={(params) => (<TextField {...params} required variant="outlined" label={attributesState.attributes[6].name} placeholder="Select a Permission"/>)}>
-                   </Autocomplete>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField id="phone" label={attributesState.attributes[7].name} fullWidth autoComplete="phone"/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                   <Autocomplete multiple limitTags={2} id="role" options={roles} getOptionLabel={(option) => option.name} defaultValue={[roles[0], roles[1], roles[2]]} renderInput={(params) => (<TextField {...params} required variant="outlined" label={attributesState.attributes[8].name} placeholder="Select a Role"/>)}>
-                   </Autocomplete>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.paper}>
-                    <TextField id="address" label={attributesState.attributes[9].name}fullWidth autoComplete="address"/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <FromControlLabel 
-                    control={<Checkbox color="secondary" name="savedUser" value="yes"/>} 
-                    label="Remember details for next time"/>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button variant="contained" onClick={onChangeHandler} color="primary" className={classes.buttons}>Cancel</Button>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button variant="contained" onClick={onSubmitHandler} color="primary" className={classes.button}>Submit</Button>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button variant="contained" onClick={onDeleteHandler} color="primary" className={classes.button}>Delete</Button>
-                </Grid>
-            </Grid>
+            <div className={classes.pageHeader}>
+                <div className={classes.icon}>
+                    <GroupIcon />
+                </div>
+                <h2>Update Users</h2>
+            </div>
+            <Card className={classes.card}>
+                {userForm}
+                <Button
+                    variant="contained"
+                    onClick={() => { props.history.push('/viewUsers') }}
+                    style={{ marginLeft: '303px', marginRight: '20px' }}
+                    color="primary">
+                    Cancel
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={onSubmitHandler}
+                    color="primary">
+                    Save
+                </Button>
+            </Card>
         </React.Fragment>
     );
-}
+};
 
-export default UpdateUser;
+const mapDispatchToProps = dispatch => {
+    return {
+        createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
+        fetchUserList: () => dispatch(actions.fetchUserList()),
+    }
+}
+export default connect(null, mapDispatchToProps)(UpdateUser);
