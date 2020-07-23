@@ -5,7 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 
 import { Login, UpdateUser, ViewUsers, CreateUser } from './pages/UserManagement/index';
-import { CreateContract } from './pages/Contract/index';
+import { CreateContract, ViewContracts } from './pages/Contract/index';
 
 import Layout from './components/Layout/Layout';
 
@@ -19,7 +19,7 @@ function App() {
           <PrivateRoute path='/viewUsers' component={ViewUsers} />
           <PrivateRoute path='/createUser' component={CreateUser} />
           <PrivateRoute path='/updateUser/:id' component={UpdateUser} />
-          <PrivateRoute path='/viewContracts'>View Contracts</PrivateRoute>
+          <PrivateRoute path='/viewContracts' component={ViewContracts}/>
           <PrivateRoute path='/createContract' component={CreateContract} />
           <Redirect to='/404' />
         </Switch>

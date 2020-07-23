@@ -16,6 +16,7 @@ const Layout = (props) => {
         // props.retoreUserInfo();
         if(props.currentUser){
             props.fetchUserList();
+            props.fetchContracts();
         }
         
     });
@@ -46,6 +47,7 @@ const mapDispatchToProps = dispatch => {
     return {
         retoreUserInfo: () => dispatch(actions.restoreUser()),
         fetchUserList: () => dispatch(actions.fetchUserList()),
+        fetchContracts: () => dispatch(actions.fetchContracts()),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

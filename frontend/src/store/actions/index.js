@@ -6,5 +6,10 @@ export {
 } from './users';
 
 export {
+    fetchContracts,
+    
+} from './contract';
+
+export {
     createToastr,
 } from './layout';

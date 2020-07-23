@@ -8,6 +8,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider, } from 'react-redux';
 import userReducer from './store/reducers/user';
 import layoutReducer from './store/reducers/layout';
+import contractReducer from './store/reducers/contract';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
@@ -28,7 +29,8 @@ axios.interceptors.request.use(request => {
 
 const reducer = combineReducers({
   user: userReducer,
-  layout: layoutReducer
+  layout: layoutReducer,
+  contract: contractReducer,
 });
 // const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -28,4 +28,21 @@ router.post(
     }
 );
 
+router.get(
+    '/contract/list',
+    async function (req, res, next) {
+        let client;
+        try {
+            client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
+            db = client.db(config.db.name);
+
+            let dCollection = db.collection('contract');
+            let result = await dCollection.find().toArray();
+            res.json({ contractList: result });
+        }
+        catch (err) { console.error(err); }
+        finally { client.close(); }
+    }
+);
+
 module.exports = router;
