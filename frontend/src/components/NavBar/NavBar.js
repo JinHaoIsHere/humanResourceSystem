@@ -17,6 +17,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 // import * as actionTypes from '../../store/actions/actionTypes';
 import * as actions from '../../store/actions';
+import permissions from '../../utils/permissions';
 const StyledMenu = withStyles({
     paper: {
         border: '1px solid #d3d4d5',
@@ -69,8 +70,9 @@ const NavBar = (props) => {
                     <img src={logoImg} alt='logo' style={{ width: '170px' }}></img>
                     <ul className={myclasses.NavItems}>
                         <li><Link to="/" > HOME </Link></li>
-                        {props.currentUserPerm.length>0 ? <li><Link to="/viewContracts" > CONTRACT </Link></li> : null}
-                        {props.currentUserPerm.length>0 ? <li><Link to="/viewUsers" > USERS </Link></li> : null}
+                        {props.currentUser ? <li><Link to="/myTimesheet" > MY TIMESHEET </Link></li> : null}
+                        {props.currentUserPerm.indexOf(permissions.CONTRACT_MANAGEMENT)>=0 ? <li><Link to="/viewContracts" > CONTRACT </Link></li> : null}
+                        {props.currentUserPerm.indexOf(permissions.USER_MANAGEMENT)>=0 ? <li><Link to="/viewUsers" > USERS </Link></li> : null}
                     </ul>
 
                     <div style={{
@@ -89,7 +91,7 @@ const NavBar = (props) => {
                         onClose={handleClose}
                     >
                         <MenuItem>
-                            <ListItemText primary={props.username} />
+                            <ListItemText primary={props.currentUser} />
                         </MenuItem>
                         <Divider />
                         <MenuItem>
@@ -104,7 +106,6 @@ const NavBar = (props) => {
 
 const mapStateToProps = state => {
     return {
-        username: state.user.currentLogInUser,
     }
 }
 const mapDispatchToProps = dispatch => {

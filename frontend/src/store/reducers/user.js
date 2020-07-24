@@ -4,7 +4,7 @@ const initialState = {
     currentLogInToken: null,
     currentLogInUser: '',
     currentLogInUserPerm: [],
-    usersList: null,
+    usersList: [],
 }
 
 const reducer = (state = initialState, action) => {

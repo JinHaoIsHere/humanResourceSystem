@@ -45,7 +45,7 @@ const SideBar = (props) => {
             </React.Fragment>
         );
     }
-    else if(currentPath==='/viewContracts' || currentPath==='/createContract'){
+    else if (currentPath === '/viewContracts' || currentPath === '/createContract') {
         listItems = (
             <React.Fragment>
                 <ListItem button onClick={() => { props.history.push('/viewContracts') }}>
@@ -56,6 +56,20 @@ const SideBar = (props) => {
                     <ListItemIcon><PersonAddIcon /></ListItemIcon>
                     <ListItemText primary='Create Contract'></ListItemText>
                 </ListItem>
+            </React.Fragment>
+        );
+    } else if (currentPath === '/myTimesheet') {
+        listItems = (
+            <React.Fragment>
+                {props.activeContract.map(item => {
+                    return (
+                        <ListItem button key={item._id}>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
+                            <ListItemText primary={item.contractName} />
+                        </ListItem>
+                    )
+                })}
+                
             </React.Fragment>
         );
     }
@@ -75,22 +89,7 @@ const SideBar = (props) => {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary='Group 1' />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary='Group 2' />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary='Group 3' />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary='Group 4' />
-                        </ListItem>
+
                     </List>
                 </div>
             </Drawer>

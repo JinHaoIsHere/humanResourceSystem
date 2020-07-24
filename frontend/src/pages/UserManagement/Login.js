@@ -34,8 +34,8 @@ const Login = (props) => {
                 if (response.data.userToken) {
                     // get JWT token from backend
                     // and save this token to redux
-                    props.onLoginToken(response.data.userToken, form.username, response.data.permission);
-                    props.history.push('/viewUsers');
+                    props.onLoginToken(response.data.userToken, form.username, response.data.expireDate, response.data.permission);
+                    props.history.push('/');
                 }
                 else {
                     props.createToastr('error', 'Wrong Username or Password');
@@ -91,7 +91,7 @@ const Login = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoginToken: (token, username, permission) => dispatch(actions.loginUser(username, token, permission)),
+        onLoginToken: (token, username, expireDate, permission) => dispatch(actions.loginUser(username, token, expireDate, permission)),
         createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }

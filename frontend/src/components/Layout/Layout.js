@@ -19,14 +19,24 @@ const Layout = (props) => {
             props.fetchContracts();
         }
         
-    });
+    }, []);
 
+    const curUsr = props.usersList.find(item=>item.username==props.currentUser);
+    console.log(curUsr);
+    let activeContract = [];
+    if(curUsr && props.contractList){
+        activeContract=props.contractList.filter(item=>{
+
+            return item.employee===curUsr._id;
+        });
+        console.log(activeContract);
+    }
     return (
         <div style={{ display: 'flex' }}>
             <CssBaseline />
             <Toastr/>
-            <NavBar currentUserPerm={props.currentUserPerm}/>
-            <SideBar></SideBar>
+            <NavBar currentUserPerm={props.currentUserPerm} currentUser={props.currentUser}/>
+            <SideBar activeContract = {activeContract}></SideBar>
             <div style={{ width: '100%', textAlign: 'center' }}>
                 <Toolbar />
                 {props.children}
@@ -38,7 +48,9 @@ const Layout = (props) => {
 const mapStateToProps = state => {
     return {
         currentUser: state.user.currentLogInUser,
-        currentUserPerm: state.user.currentLogInUserPerm
+        currentUserPerm: state.user.currentLogInUserPerm,
+        contractList: state.contract.contractList,
+        usersList: state.user.usersList,
     }
 }
 

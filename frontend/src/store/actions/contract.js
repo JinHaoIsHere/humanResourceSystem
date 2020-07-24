@@ -8,7 +8,7 @@ export const fetchContracts = () => {
     return dispatch => {
         axios.get('/api/contract/list')
             .then(res => {
-                console.log(res.data);
+                //console.log(res.data);
                 dispatch({ type: actionTypes.SET_CONTRACT_LIST, contractList: res.data.contractList })
             })
             .catch(err => {

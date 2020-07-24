@@ -10,7 +10,7 @@ const PrivateRoute = (props) => {
         <Route {...props}>{props.children}</Route>
         )
     } else {
-        return (<Route render={()=><Redirect to='login'/>}
+        return (<Route render={()=><Redirect to='/login'/>}
              />)
     }
 };

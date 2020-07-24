@@ -43,8 +43,9 @@ t90qmAI4YoVC1YZa+JiLAoUteYQeBUGnlqkOOpbWMLUM+VScbiJo6Dm5649U4Y5p
 iwIDAQAB
 -----END PUBLIC KEY-----`;
 const sign = (user)=>{
-    return jwt.sign(user, { key:privateKEY, passphrase:privateKeyPassphrase }, {expiresIn: '2d', algorithm: 'RS256'}, )
-    //return jwt.sign(user, privateKEY, {expiresIn: '2d'})
+    const token = jwt.sign(user, { key:privateKEY, passphrase:privateKeyPassphrase }, {expiresIn: '2d', algorithm: 'RS256'}, )
+    const expireDate = new Date(new Date().valueOf() + 48*60*60*1000);
+    return {token: token, expireDate: expireDate};
 }
 
 module.exports={

@@ -6,7 +6,7 @@ var config = require('../config');
 const bcrypt = require('../utils/bcrypt');
 const auth = require('../utils/auth');
 var assert = require('assert');
-const { ObjectID, ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 
 router.post(
@@ -26,13 +26,15 @@ router.post(
             return
         }
         // console.log(result);
-        let token = null;
-        let perm = [];
-        if (result) {
-            token = auth.sign(result);
-            perm = result.permission;
+        if(!result){
+            res.json({ userToken: null });
+            return;    
         }
-        res.json({ userToken: token, permission: perm });
+        
+        const {token, expireDate} =  auth.sign(result);
+        perm = result.permission;
+        //console.log(expireDate);
+        res.json({ userToken: token, permission: perm, expireDate: expireDate });
     }
 );
 
