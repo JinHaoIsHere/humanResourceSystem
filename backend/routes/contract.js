@@ -78,4 +78,25 @@ router.post(
     }
 )
 
+router.post(
+    '/contract/delete',
+    async function (req, res) {
+        let client;
+        try {
+            client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
+            db = client.db(config.db.name);
+            let dCollection = db.collection('contract');
+            let result = await dCollection.deleteOne({_id: ObjectId(req.body.contractId)});
+            if(!result){
+                res.status(400).json('Wrong Contract ID');
+            }else{
+                res.json('Delete successfully');
+            }
+            
+        }
+        catch (err) { console.error(err); }
+        finally { client.close(); }
+    }
+)
+
 module.exports = router;

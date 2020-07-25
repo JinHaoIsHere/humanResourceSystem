@@ -41,11 +41,20 @@ const ViewContracts = (props) => {
             if(employee.length){
                 employeeName=employee[0].username;
             }
+            const manager = props.usersList.filter(item=>{
+                return item._id==contract.manager
+            });
+            let managerName = '';
+            
+            if(manager.length){
+                managerName=manager[0].username;
+            }
             return (
                 <TableRow key={contract._id} onClick={()=>{props.history.push('/updateContract/'+contract._id)}}>
                     <TableCell align="center">{contract.contractName}</TableCell>
                     <TableCell align="center">{employeeName}</TableCell>
                     <TableCell align="center">{contract.employer}</TableCell>
+                    <TableCell align="center">{managerName}</TableCell>
                     <TableCell align="center">{contract.startDate?moment(contract.startDate).format('YYYY-MM-DD'):null}</TableCell>
                     <TableCell align="center">{contract.endDate?moment(contract.endDate).format('YYYY-MM-DD'):null}</TableCell>
                 </TableRow>
@@ -100,7 +109,7 @@ const ViewContracts = (props) => {
                 <h2>View Contracts</h2>
                 <Button variant="contained"
                     color="primary" style={{ marginLeft: 'auto' }}
-                    onClick={() => { props.history.push('/createUser') }}><AddIcon /></Button>
+                    onClick={() => { props.history.push('/createContract') }}><AddIcon /></Button>
             </div>
             <Card className={classes.card}>
                 <CardContent>
@@ -111,6 +120,7 @@ const ViewContracts = (props) => {
                                     <TableCell align="center">Contract Name</TableCell>
                                     <TableCell align="center">Employee</TableCell>
                                     <TableCell align="center">Employer</TableCell>
+                                    <TableCell align="center">Manager</TableCell>
                                     <TableCell align="center">Start Date</TableCell>
                                     <TableCell align="center">End Date</TableCell>
                                 </TableRow>

@@ -17,12 +17,22 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const UpdateContract = (props) => {
 
     const [form, setForm] = React.useState(null);
 
     const contractId = props.match.params.id;
+    const [openDialog, setOpenDialog] = React.useState(false);
+
+
+    const triggerDialog = (bol) => {
+        setOpenDialog(bol);
+    };
     useEffect(() => {
         console.log(props.contractList);
         console.log(contractId);
@@ -57,6 +67,10 @@ const UpdateContract = (props) => {
             props.createToastr('error', 'Employee Name is required');
             pass = false;
         }
+        if (!form.manager) {
+            props.createToastr('error', 'Manager is required');
+            pass = false;
+        }
         if (!form.startDate || !form.endDate) {
             props.createToastr('error', 'Contract Date is required');
             pass = false;
@@ -70,13 +84,26 @@ const UpdateContract = (props) => {
         //send login info validation to API
         axios.post('/api/contract/update', { ...form })
             .then(response => {
-                props.createToastr('success',response.data);
+                props.createToastr('success', response.data);
                 props.history.push('/viewContracts');
                 props.fetchContracts();
             }).catch(error => {
                 props.createToastr('error', error.response.data);
             });
     }
+
+    const onDeleteHandler = () => {
+        setOpenDialog(false);
+        axios.post('/api/contract/delete', { contractId: form._id })
+            .then(response => {
+                props.createToastr('success', response.data);
+                props.history.push('/viewContracts');
+                props.fetchContracts();
+            }).catch(error => {
+                props.createToastr('error', error.response.data);
+            });
+    };
+
     const useStyles = makeStyles((theme) => ({
         card: {
             width: '1000px',
@@ -132,13 +159,28 @@ const UpdateContract = (props) => {
         contractForm = (
             <form className={classes.form}>
                 <TextField
-                    style={{ margin: '8px', width: '62.2ch', }}
+                    className={classes.textField}
                     name="contractName"
-                    value={form.contractName}
                     label="Contract Name"
+                    value={form.contractName}
                     onChange={onChangeHandler}
                     variant="outlined"
                 />
+                <FormControl variant="outlined" className={classes.textField}>
+                    <InputLabel id="employee-select-outlined-label">Manager</InputLabel>
+                    <Select
+                        labelId="employee-select-outlined-label"
+                        name="manager"
+                        value={form.manager}
+                        onChange={onChangeHandler}
+                        label="Manager"
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        {userOptions}
+                    </Select>
+                </FormControl>
                 <FormControl variant="outlined" className={classes.textField}>
                     <InputLabel id="employee-select-outlined-label">Employee</InputLabel>
                     <Select
@@ -210,8 +252,15 @@ const UpdateContract = (props) => {
                 {contractForm}
                 <Button
                     variant="contained"
-                    onClick={() => { props.history.push('/viewUsers') }}
-                    style={{ marginLeft: '303px', marginRight: '20px' }}
+                    onClick={triggerDialog.bind(this, true)}
+                    color="secondary"
+                    startIcon={<DeleteIcon />}>
+                    Delete
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={() => { props.history.push('/viewContracts') }}
+                    style={{ marginLeft: '190px', marginRight: '20px' }}
                     color="primary">
                     Cancel
                 </Button>
@@ -222,6 +271,22 @@ const UpdateContract = (props) => {
                     Save
                 </Button>
             </Card>
+            <Dialog
+                open={openDialog}
+                onClose={triggerDialog.bind(this, false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Remove this contract from system?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={triggerDialog.bind(this, false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={onDeleteHandler} color="secondary" autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 }

@@ -26,6 +26,7 @@ const CreateContract = (props) => {
         employee: '',
         startDate: null,
         endDate: null,
+        manager: '',
     });
     const onChangeHandler = (event, field = null) => {
         if (!event) return;
@@ -46,6 +47,10 @@ const CreateContract = (props) => {
         }
         if (!form.employee) {
             props.createToastr('error', 'Employee Name is required');
+            pass = false;
+        }
+        if (!form.manager) {
+            props.createToastr('error', 'Manager is required');
             pass = false;
         }
         if (!form.startDate || !form.endDate) {
@@ -130,12 +135,27 @@ const CreateContract = (props) => {
             <Card className={classes.card}>
                 <form className={classes.form}>
                     <TextField
-                        style={{ margin: '8px', width: '62.2ch', }}
+                        className={classes.textField}
                         name="contractName"
                         label="Contract Name"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
+                    <FormControl variant="outlined" className={classes.textField}>
+                        <InputLabel id="employee-select-outlined-label">Manager</InputLabel>
+                        <Select
+                            labelId="employee-select-outlined-label"
+                            name="manager"
+                            value={form.manager}
+                            onChange={onChangeHandler}
+                            label="Manager"
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {userOptions}
+                        </Select>
+                    </FormControl>
                     <FormControl variant="outlined" className={classes.textField}>
                         <InputLabel id="employee-select-outlined-label">Employee</InputLabel>
                         <Select

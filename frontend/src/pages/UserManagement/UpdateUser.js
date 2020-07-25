@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
@@ -12,6 +12,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import permissions from '../../utils/permissions';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -19,28 +23,48 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const UpdateUser = (props) => {
     const [form, setForm] = React.useState(null);
     const userId = props.match.params.id;
+    const [openDialog, setOpenDialog] = React.useState(false);
+    
+
+    const triggerDialog = (bol) => {
+        setOpenDialog(bol);
+    };
+
     useEffect(() => {
-        axios.get('/api/admin/getUser?id='+userId)
+        axios.get('/api/admin/getUser?id=' + userId)
             .then(response => {
-                const updatedForm = { ...response.data.user, password: ''};
+                const updatedForm = { ...response.data.user, password: '' };
                 console.log(updatedForm);
                 setForm(updatedForm);
             })
-            .catch(error=>{
+            .catch(error => {
                 props.createToastr('error', error.response.data);
             });
     }, []);
-    
+
     const onChangeHandler = (event) => {
         let updatedForm = { ...form };
         updatedForm[event.target.id] = event.target.value;
         setForm(updatedForm);
     }
-    const onPermChangeHandler=(event, newValue)=>{
+    const onPermChangeHandler = (event, newValue) => {
         let updatedForm = { ...form };
         updatedForm.permission = newValue;
         setForm(updatedForm);
     }
+    
+    const onDeleteHandler = () => {
+        setOpenDialog(false);
+        axios.post('/api/admin/deleteUser', {userId: form._id})
+            .then(response => {
+                props.createToastr('success', response.data);
+                props.history.push('/viewUsers');
+                props.fetchUserList();
+            }).catch(error => {
+                props.createToastr('error', error.response.data);
+            });
+    };
+
     const onSubmitHandler = (event) => {
         //validate
         if (!form.username) {
@@ -53,7 +77,7 @@ const UpdateUser = (props) => {
         //send login info validation to API
         axios.post('/api/admin/updateUser', { ...form })
             .then(response => {
-                props.createToastr('success',response.data);
+                props.createToastr('success', response.data);
                 props.history.push('/viewUsers');
                 props.fetchUserList();
             }).catch(error => {
@@ -100,9 +124,9 @@ const UpdateUser = (props) => {
     const classes = useStyles();
     const permissionOptions = Object.keys(permissions);
 
-    let userForm=null;
-    if(form){
-        userForm=(<form className={classes.form}>
+    let userForm = null;
+    if (form) {
+        userForm = (<form className={classes.form}>
             <TextField
                 className={classes.textField}
                 required
@@ -202,7 +226,7 @@ const UpdateUser = (props) => {
                 renderInput={(params) => (
                     <TextField {...params} variant="outlined" label="Permissions" placeholder="Permission" />
                 )}
-               value={form.permission}
+                value={form.permission}
             />
         </form>)
     }
@@ -218,8 +242,15 @@ const UpdateUser = (props) => {
                 {userForm}
                 <Button
                     variant="contained"
+                    onClick={triggerDialog.bind(this, true)}
+                    color="secondary"
+                    startIcon={<DeleteIcon />}>
+                    Delete
+                </Button>
+                <Button
+                    variant="contained"
                     onClick={() => { props.history.push('/viewUsers') }}
-                    style={{ marginLeft: '303px', marginRight: '20px' }}
+                    style={{ marginLeft: '190px', marginRight: '20px' }}
                     color="primary">
                     Cancel
                 </Button>
@@ -230,6 +261,22 @@ const UpdateUser = (props) => {
                     Save
                 </Button>
             </Card>
+            <Dialog
+                open={openDialog}
+                onClose={triggerDialog.bind(this, false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Remove this user from system?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={triggerDialog.bind(this, false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={onDeleteHandler} color="secondary" autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 };
