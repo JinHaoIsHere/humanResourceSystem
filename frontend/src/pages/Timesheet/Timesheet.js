@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TimesheetsInContract from './TimesheetsInContract';
 import { makeStyles } from '@material-ui/core/styles';
 import AlarmIcon from '@material-ui/icons/Alarm';
-import { useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import MaterialTable from 'material-table';
-
+import axios from 'axios';
+import * as actions from '../../store/actions';
 import { forwardRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -50,7 +51,9 @@ const Timesheet = (props) => {
     const contractId = props.match.params.id;
     const timesheetDate = props.match.params.date;
     const currentContract = contractList.find(item => item._id == contractId);
-
+    const dispatch = useDispatch();
+    const createToastr = (type, message) => dispatch(actions.createToastr(type, message));
+    const fetchContracts = () => dispatch(actions.fetchContracts());
 
     const useStyles = makeStyles((theme) => ({
         card: {
@@ -96,21 +99,46 @@ const Timesheet = (props) => {
     }));
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
-        columns: [
-            { title: 'Task Name', field: 'task' },
-            { title: 'Monday', field: 'time1', type: 'numeric' },
-            { title: 'Tuesday', field: 'time2', type: 'numeric' },
-            { title: 'Wednesday', field: 'time3', type: 'numeric' },
-            { title: 'Thursday', field: 'time4', type: 'numeric' },
-            { title: 'Friday', field: 'time5', type: 'numeric' },
-            { title: 'Saturday', field: 'time6', type: 'numeric' },
-            { title: 'Sunday', field: 'time7', type: 'numeric' },
-        ],
-        data: [
-            { task: 'Add User Page', time1: 2, time2: 2, time3: 2, time4: 2, time5: 2, time6: 2, time7: 2 },
-        ],
-    });
+    const columns = [
+        { title: 'Task Name', field: 'task' },
+        { title: 'Monday', field: 'time1', type: 'numeric' },
+        { title: 'Tuesday', field: 'time2', type: 'numeric' },
+        { title: 'Wednesday', field: 'time3', type: 'numeric' },
+        { title: 'Thursday', field: 'time4', type: 'numeric' },
+        { title: 'Friday', field: 'time5', type: 'numeric' },
+        { title: 'Saturday', field: 'time6', type: 'numeric' },
+        { title: 'Sunday', field: 'time7', type: 'numeric' },
+    ];
+    const [timesheetData, setState] = React.useState([]);
+
+
+
+    const onSaveSheet = (status) => {
+
+        const updateContract = {
+            _id: contractId,
+            timesheet: {
+                ...currentContract.timesheet,
+                [timesheetDate]: {
+                    data: timesheetData,
+                    status: status,
+                },
+            }
+        }
+        axios.post('/api/contract/update', updateContract)
+            .then(response => {
+                createToastr('success', response.data);
+                if (status == "EDITING")
+                    createToastr('success', 'Timesheet was saved!');
+                else if (status == "PENDING")
+                    createToastr('success', 'Timesheet was submitted!');
+                //props.history.push('/viewContracts');
+                fetchContracts();
+
+            }).catch(error => {
+                createToastr('error', error.response.data);
+            });
+    };
 
     if (!currentContract || !currentContract.timesheet || !currentContract.timesheet[timesheetDate]) {
         props.history.goBack();
@@ -118,68 +146,94 @@ const Timesheet = (props) => {
     }
     const currentTimesheet = currentContract.timesheet[timesheetDate];
     console.log('currentTimesheet: ' + currentTimesheet);
+    if (timesheetData.length == 0 && currentTimesheet.data != 0) {
+        setState(currentTimesheet.data);
 
+    }
     let timesheet = null;
+    let submitBtn = null;
     if (currentTimesheet) {
+        let editableSetting = null;
+        if (currentTimesheet.status == "EDITING") {
+            editableSetting = {
+                onRowAdd: (newData) =>
+                    new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve();
+                            setState((prevState) => {
+                                const data = [...prevState];
+                                data.push(newData);
+                                return data;
+                            });
+                        }, 600);
+                    }),
+                onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve();
+                            if (oldData) {
+                                setState((prevState) => {
+                                    const data = [...prevState];
+                                    data[data.indexOf(oldData)] = newData;
+                                    return data;
+                                });
+                            }
+                        }, 600);
+                    }),
+                onRowDelete: (oldData) =>
+                    new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve();
+                            setState((prevState) => {
+                                const data = [...prevState];
+                                data.splice(data.indexOf(oldData), 1);
+                                return data;
+                            });
+                        }, 600);
+                    }),
+                onCellEditFinished: () => {
+                    console.log('edited finished');
+                }
+            };
+            submitBtn = (
+                <React.Fragment>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        onClick={onSaveSheet.bind(this, 'EDITING')}
+                        color="primary">
+
+                        Save
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        onClick={onSaveSheet.bind(this, 'PENDING')}
+                        color="primary">
+                        Submit
+                    </Button>
+                </React.Fragment>);
+        }
         timesheet = (
             <MaterialTable
                 icons={tableIcons}
-                title="Editable Example"
-                columns={state.columns}
-                data={state.data}
+                title={currentContract.contractName + ' - ' + timesheetDate + ' - ' + currentTimesheet.status}
+                columns={columns}
+                data={timesheetData}
                 options={{
                     search: false
                 }}
-                editable={{
-                    onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setState((prevState) => {
-                                        const data = [...prevState.data];
-                                        data[data.indexOf(oldData)] = newData;
-                                        return { ...prevState, data };
-                                    });
-                                }
-                            }, 600);
-                        }),
-                    onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                    onCellEditFinished: () => {
-                        console.log('edited finished');
-                    }
-                }}
+                editable={editableSetting}
 
             />
         );
     }
-    const totalTime = state.data.reduce((acc, curr) => {
+    const totalTime = timesheetData.reduce((acc, curr) => {
         let curTotal = 0;
 
         for (const [key, value] of Object.entries(curr)) {
             console.log(`${key}: ${value}`);
-            if (typeof(value)=='number' && !isNaN(value)) {
+            if (typeof (value) == 'number' && !isNaN(value)) {
                 curTotal += value;
             }
         }
@@ -203,24 +257,11 @@ const Timesheet = (props) => {
                 <Button
                     variant="contained"
                     className={classes.button}
+                    onClick={() => { props.history.push('../' + contractId) }}
                     color="primary">
                     Back
                 </Button>
-                <Button
-                    variant="contained"
-                    className={classes.button}
-
-                    color="primary">
-
-                    Save
-                </Button>
-                <Button
-                    variant="contained"
-                    className={classes.button}
-
-                    color="primary">
-                    Submit
-                </Button>
+                {submitBtn}
             </Card>
         </React.Fragment>)
 }

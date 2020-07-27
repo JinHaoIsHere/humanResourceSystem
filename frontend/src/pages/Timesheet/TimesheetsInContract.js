@@ -29,7 +29,11 @@ const TimesheetsInContract = (props) => {
             const updateContract = {
                 _id: currentContract._id,
                 timesheet: {
-                    [startOfWeek]: {},
+                    ...currentContract.timesheet,
+                    [startOfWeek]: {
+                        data:[],
+                        status:'EDITING'
+                    },
                 }
             }
             axios.post('/api/contract/update', updateContract)
@@ -45,6 +49,7 @@ const TimesheetsInContract = (props) => {
         } else {
             const timesheets = currentContract.timesheet;
             sheetList = Object.keys(timesheets).map(date=>{
+                console.log(props.match.url+'/'+date);
                 return (<div key={date}>
                     <Link to={props.match.url+'/'+date}>{date}</Link>
                 </div>)

@@ -63,13 +63,13 @@ const SideBar = (props) => {
                 {props.activeContract.map(item => {
                     return (
                         <ListItem button key={item._id}
-                            onClick={()=>{props.history.push('/myTimesheet/'+item._id)}}>
+                            onClick={() => { props.history.push('/myTimesheet/' + item._id) }}>
                             <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary={item.contractName} />
                         </ListItem>
                     )
                 })}
-                
+
             </React.Fragment>
         );
     }
@@ -85,11 +85,15 @@ const SideBar = (props) => {
                 <Toolbar />
                 <div className={myclasses.DrawerContainer}>
                     <List>
-                        {listItems}
+                        <ListItem button
+                            onClick={() => { props.history.push('/reviewTimesheet') }}>
+                            <ListItemIcon><ListIcon /></ListItemIcon>
+                            <ListItemText primary='Review Contracts' />
+                        </ListItem>
                     </List>
                     <Divider />
                     <List>
-
+                        {listItems}
                     </List>
                 </div>
             </Drawer>
