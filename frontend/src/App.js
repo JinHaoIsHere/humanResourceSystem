@@ -4,8 +4,9 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 
 
-import { Login, UpdateUser, ViewUsers, CreateUser } from './pages/UserManagement/index';
-import { CreateContract, ViewContracts, UpdateContract } from './pages/Contract/index';
+import { Login, UpdateUser, ViewUsers, CreateUser } from './pages/UserManagement';
+import { CreateContract, ViewContracts, UpdateContract } from './pages/Contract';
+import { TimesheetsInContract, Timesheet } from './pages/Timesheet';
 
 import Layout from './components/Layout/Layout';
 
@@ -19,10 +20,12 @@ function App() {
           <PrivateRoute path='/viewUsers' component={ViewUsers} />
           <PrivateRoute path='/createUser' component={CreateUser} />
           <PrivateRoute path='/updateUser/:id' component={UpdateUser} />
-          <PrivateRoute path='/viewContracts' component={ViewContracts}/>
+          <PrivateRoute path='/viewContracts' component={ViewContracts} />
           <PrivateRoute path='/createContract' component={CreateContract} />
           <PrivateRoute path='/updateContract/:id' component={UpdateContract} />
-          <PrivateRoute path='/myTimesheet' >My Timesheet</PrivateRoute>
+          <PrivateRoute path='/myTimesheet' exact>My Timesheet</PrivateRoute>
+          <PrivateRoute path='/myTimesheet/:id' exact component={TimesheetsInContract} />
+          <PrivateRoute path='/myTimesheet/:id/:date' component={Timesheet} />
           <Redirect to='/404' />
         </Switch>
       </Layout>

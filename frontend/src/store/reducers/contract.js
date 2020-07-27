@@ -1,7 +1,7 @@
 import * as actionsType from '../actions/actionTypes';
 
 const initialState = {
-    contractList: null,
+    contractList: [],
 }
 
 const reducer = (state = initialState, action) => {

@@ -4,7 +4,6 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 const PrivateRoute = (props) => {
 
-    console.log(props.currentUser);
     if (props.currentUser) {
         return (
         <Route {...props}>{props.children}</Route>

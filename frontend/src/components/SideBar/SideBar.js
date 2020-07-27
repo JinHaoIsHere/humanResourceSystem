@@ -29,7 +29,6 @@ const SideBar = (props) => {
     const classes = useStyles();
 
     const currentPath = props.history.location.pathname;
-    console.log(currentPath);
     let listItems = null;
     if (currentPath === '/viewUsers' || currentPath === '/createUser') {
         listItems = (
@@ -63,7 +62,8 @@ const SideBar = (props) => {
             <React.Fragment>
                 {props.activeContract.map(item => {
                     return (
-                        <ListItem button key={item._id}>
+                        <ListItem button key={item._id}
+                            onClick={()=>{props.history.push('/myTimesheet/'+item._id)}}>
                             <ListItemIcon><ListIcon /></ListItemIcon>
                             <ListItemText primary={item.contractName} />
                         </ListItem>

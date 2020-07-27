@@ -11,25 +11,24 @@ import Toastr from '../Toastr/Toastr';
 // 2. Render the nav items according the users info and permissions
 const Layout = (props) => {
 
+    const currentUser = props.currentUser;
     useEffect(() => {
         //console.log(props);
         // props.retoreUserInfo();
-        if(props.currentUser){
+        if(currentUser){
             props.fetchUserList();
             props.fetchContracts();
         }
         
-    }, []);
+    }, [currentUser]);
 
     const curUsr = props.usersList.find(item=>item.username==props.currentUser);
-    console.log(curUsr);
+    
     let activeContract = [];
     if(curUsr && props.contractList){
         activeContract=props.contractList.filter(item=>{
-
             return item.employee===curUsr._id;
         });
-        console.log(activeContract);
     }
     return (
         <div style={{ display: 'flex' }}>
