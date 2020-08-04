@@ -51,7 +51,7 @@ const TimesheetsInContract = (props) => {
             sheetList = Object.keys(timesheets).map(date=>{
                 console.log(props.match.url+'/'+date);
                 return (<div key={date}>
-                    <Link to={props.match.url+'/'+date}>{date}</Link>
+                    <Link to={props.match.url+'/'+date}>{date} - {timesheets[date].status}</Link>
                 </div>)
             })
         }

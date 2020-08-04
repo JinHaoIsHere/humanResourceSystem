@@ -6,7 +6,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 import { Login, UpdateUser, ViewUsers, CreateUser } from './pages/UserManagement';
 import { CreateContract, ViewContracts, UpdateContract } from './pages/Contract';
-import { TimesheetsInContract, Timesheet, ReviewTimesheet } from './pages/Timesheet';
+import { TimesheetsInContract, Timesheet, ReviewTimesheet, MyTimesheetSummary } from './pages/Timesheet';
 
 import Layout from './components/Layout/Layout';
 
@@ -24,7 +24,7 @@ function App() {
           <PrivateRoute path='/createContract' component={CreateContract} />
           <PrivateRoute path='/updateContract/:id' component={UpdateContract} />
           <PrivateRoute path='/reviewTimesheet' component={ReviewTimesheet} />
-          <PrivateRoute path='/myTimesheet' exact>My Timesheet</PrivateRoute>
+          <PrivateRoute path='/myTimesheet' exact component={MyTimesheetSummary}></PrivateRoute>
           <PrivateRoute path='/myTimesheet/:id' exact component={TimesheetsInContract} />
           <PrivateRoute path='/myTimesheet/:id/:date' component={Timesheet} />
           <Redirect to='/404' />

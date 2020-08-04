@@ -9,7 +9,9 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import RateReviewIcon from '@material-ui/icons/RateReview';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import EventBusyIcon from '@material-ui/icons/EventBusy';
 import GroupIcon from '@material-ui/icons/Group';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListIcon from '@material-ui/icons/List';
@@ -21,9 +23,13 @@ const SideBar = (props) => {
         drawer: {
             width: drawerWidth,
             flexShrink: 0,
+            fontFamily: 'Chilanka',
         },
         drawerPaper: {
             width: drawerWidth,
+        },
+        listItemText: {
+            fontFamily: 'Chilanka'
         }
     }));
     const classes = useStyles();
@@ -35,11 +41,11 @@ const SideBar = (props) => {
             <React.Fragment>
                 <ListItem button onClick={() => { props.history.push('/viewUsers') }}>
                     <ListItemIcon><GroupIcon /></ListItemIcon>
-                    <ListItemText primary='All Users' />
+                    <ListItemText primary='All Users' classes={{ primary: classes.listItemText }} />
                 </ListItem>
                 <ListItem button onClick={() => { props.history.push('/createUser') }}>
                     <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                    <ListItemText primary='Create User'></ListItemText>
+                    <ListItemText primary='Create User' classes={{ primary: classes.listItemText }}></ListItemText>
                 </ListItem>
             </React.Fragment>
         );
@@ -60,16 +66,38 @@ const SideBar = (props) => {
     } else if (currentPath === '/myTimesheet') {
         listItems = (
             <React.Fragment>
+                <ListItem dense>
+                    <ListItemText primary='Manage' classes={{ primary: classes.listItemText }} />
+                </ListItem>
+                <ListItem button
+                    onClick={() => { props.history.push('/reviewTimesheet') }}>
+                    <ListItemIcon><RateReviewIcon /></ListItemIcon>
+                    <ListItemText primary='Review Contracts' classes={{ primary: classes.listItemText }} />
+                </ListItem>
+                <Divider />
+
+                <ListItem dense>
+                    <ListItemText primary='Active contract' classes={{ primary: classes.listItemText }} />
+                </ListItem>
                 {props.activeContract.map(item => {
                     return (
                         <ListItem button key={item._id}
                             onClick={() => { props.history.push('/myTimesheet/' + item._id) }}>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary={item.contractName} />
+                            <ListItemIcon><EventAvailableIcon /></ListItemIcon>
+                            <ListItemText primary={item.contractName} classes={{ primary: classes.listItemText }} />
                         </ListItem>
                     )
                 })}
+                <Divider />
 
+                <ListItem dense>
+                    <ListItemText primary='Expired contract' classes={{ primary: classes.listItemText }} />
+                </ListItem>
+                <ListItem button
+                    >
+                    <ListItemIcon><EventBusyIcon /></ListItemIcon>
+                    <ListItemText primary='EG Expired' classes={{ primary: classes.listItemText }} />
+                </ListItem>
             </React.Fragment>
         );
     }
@@ -84,13 +112,7 @@ const SideBar = (props) => {
             >
                 <Toolbar />
                 <div className={myclasses.DrawerContainer}>
-                    <List>
-                        <ListItem button
-                            onClick={() => { props.history.push('/reviewTimesheet') }}>
-                            <ListItemIcon><ListIcon /></ListItemIcon>
-                            <ListItemText primary='Review Contracts' />
-                        </ListItem>
-                    </List>
+
                     <Divider />
                     <List>
                         {listItems}

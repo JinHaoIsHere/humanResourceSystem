@@ -52,6 +52,7 @@ const NavBar = (props) => {
     const useStyles = makeStyles((theme) => ({
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: '#393D3F',
         },
         name: {
         }
@@ -67,7 +68,8 @@ const NavBar = (props) => {
                     {/* <Typography variant="h6" noWrap style={{width:'200px'}}>
                         Authright HRS
                     </Typography> */}
-                    <img src={logoImg} alt='logo' style={{ width: '170px' }}></img>
+                    {/* <img src={logoImg} alt='logo' style={{ width: '170px' }}></img> */}
+                    <div className={myclasses.NavLogo}>AUTHRIGHT</div>
                     <ul className={myclasses.NavItems}>
                         <li><Link to="/" > HOME </Link></li>
                         {props.currentUser ? <li><Link to="/myTimesheet" > MY TIMESHEET </Link></li> : null}
