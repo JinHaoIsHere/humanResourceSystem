@@ -36,7 +36,7 @@ const Layout = (props) => {
             <Toastr/>
             <NavBar currentUserPerm={props.currentUserPerm} currentUser={props.currentUser}/>
             <SideBar activeContract = {activeContract}></SideBar>
-            <div style={{ width: '100%', textAlign: 'center' }}>
+            <div style={{ width: '100%', textAlign: 'center', backgroundColor: '#e5e4e2' }}>
                 <Toolbar />
                 {props.children}
             </div>

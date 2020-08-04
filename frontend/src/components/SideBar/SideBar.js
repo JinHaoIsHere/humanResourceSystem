@@ -27,6 +27,7 @@ const SideBar = (props) => {
         },
         drawerPaper: {
             width: drawerWidth,
+            backgroundColor: '#e5e4e2'
         },
         listItemText: {
             fontFamily: 'Chilanka'
