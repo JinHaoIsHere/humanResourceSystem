@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
-import {createToastrHelper} from './layout';
+import { createToastrHelper } from './layout';
 
 export const restoreUser = () => {
     return dispatch => {
@@ -8,20 +8,20 @@ export const restoreUser = () => {
         //then fetch it. Or do nothing.
         const currentUserStr = localStorage.getItem("currentUser");
         const currentUser = JSON.parse(currentUserStr);
-        
-       
-        
-        if (currentUser && currentUser.username && currentUser.token) {
-            const expiredDate = currentUser.expireDate;
-            if(!expiredDate || new Date(expiredDate).getTime() < new Date()){
+
+        if (currentUser && currentUser.userToken && currentUser.userInfo) {
+            const expiredDate = currentUser.userToken.expireDate;
+            if (!expiredDate || new Date(expiredDate).getTime() < new Date()) {
                 dispatch({ type: actionTypes.LOGOUT });
                 return;
             }
             dispatch({
                 type: actionTypes.LOGIN,
-                username: currentUser.username,
-                token: currentUser.token,
-                permission: currentUser.permission,
+                username: currentUser.userInfo.firstName + ' ' + currentUser.userInfo.lastName,
+                email: currentUser.userInfo.email,
+                permission: currentUser.userInfo.permission,
+                token: currentUser.userToken.token,
+                expireDate: currentUser.userToken.expireDate,
             })
         } else {
             dispatch({ type: actionTypes.LOGOUT });
@@ -29,17 +29,18 @@ export const restoreUser = () => {
     }
 }
 
-export const loginUser = (username, token, expireDate, permission=[]) => {
+export const loginUser = (userToken, userInfo) => {
     //save username and token to the localstorage
-    const userInfo = JSON.stringify({ username: username, token: token, expireDate: expireDate, permission: permission });
+    const currentUser = JSON.stringify({ userToken: userToken, userInfo: userInfo });
     //console.log(userInfo);
-    localStorage.setItem('currentUser', userInfo);
+    localStorage.setItem('currentUser', currentUser);
     return {
         type: actionTypes.LOGIN,
-        username: username,
-        permission: permission,
-        token: token,
-        expireDate: expireDate,
+        username: userInfo.firstName + ' ' + userInfo.lastName,
+        email: userInfo.email,
+        permission: userInfo.permission,
+        token: userToken.token,
+        expireDate: userToken.expireDate,
     }
 }
 

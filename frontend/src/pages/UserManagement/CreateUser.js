@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
@@ -16,30 +16,29 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const CreateUser = (props) => {
     const [form, setForm] = React.useState({
-        username: null,
-        password: null,
-        lastname: null,
-        firstname: null,
-        email: null,
-        phone: null,
-        address: null,
-        title: null,
-        role: null,
-        permission: null,
+        password: '',
+        lastname: '',
+        firstname: '',
+        email: '',
+        phone: '',
+        address: '',
+        title: '',
+        role: '',
+        permission: [],
     });
     const onChangeHandler = (event) => {
         let updatedForm = { ...form };
         updatedForm[event.target.id] = event.target.value;
         setForm(updatedForm);
     }
-    const onPermChangeHandler=(event, newValue)=>{
+    const onPermChangeHandler = (event, newValue) => {
         let updatedForm = { ...form };
         updatedForm.permission = newValue;
         setForm(updatedForm);
     }
     const onSubmitHandler = (event) => {
         //validate
-        if (!form.username || !form.password) {
+        if (!form.email || !form.password) {
             props.createToastr('error', 'Required fields are not filled');
             return;
         }
@@ -55,10 +54,8 @@ const CreateUser = (props) => {
     }
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1000px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
+            width: '900px',
+            margin: '0 auto'
         },
         form: {
             width: '600px',
@@ -74,10 +71,10 @@ const CreateUser = (props) => {
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
+            margin: '0 auto',
         },
         icon: {
             width: '60px',
@@ -92,29 +89,21 @@ const CreateUser = (props) => {
     }));
     const classes = useStyles();
     const permissionOptions = Object.keys(permissions);
-    
+
     return (
-        <React.Fragment>
+        <div>
+
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <GroupIcon />
-                </div>
-                <h2>Create Users</h2>
+                Create Users
             </div>
+            
             <Card className={classes.card}>
                 <form className={classes.form}>
                     <TextField
-                        className={classes.textField}
                         required
-                        id="username"
-                        label="UserName"
-                        onChange={onChangeHandler}
-                        variant="outlined"
-                    />
-                    <TextField
-                        className={classes.textField}
-                        id="firstname"
-                        label="FirstName"
+                        style={{ margin: '8px', width: '62.2ch', }}
+                        id="email"
+                        label="Email"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
@@ -129,6 +118,20 @@ const CreateUser = (props) => {
                     />
                     <TextField
                         className={classes.textField}
+                        id="phone"
+                        label="Phone"
+                        onChange={onChangeHandler}
+                        variant="outlined"
+                    />
+                    <TextField
+                        className={classes.textField}
+                        id="firstname"
+                        label="FirstName"
+                        onChange={onChangeHandler}
+                        variant="outlined"
+                    />
+                    <TextField
+                        className={classes.textField}
                         id="lastname"
                         label="LastName"
                         onChange={onChangeHandler}
@@ -136,23 +139,8 @@ const CreateUser = (props) => {
                     />
                     <TextField
                         className={classes.textField}
-                        id="email"
-                        label="Email"
-                        onChange={onChangeHandler}
-                        variant="outlined"
-                    />
-
-                    <TextField
-                        className={classes.textField}
                         id="role"
                         label="Role"
-                        onChange={onChangeHandler}
-                        variant="outlined"
-                    />
-                    <TextField
-                        className={classes.textField}
-                        id="phone"
-                        label="Phone"
                         onChange={onChangeHandler}
                         variant="outlined"
                     />
@@ -195,9 +183,10 @@ const CreateUser = (props) => {
                         )}
                     />
                 </form>
+                <div>
                 <Button
                     variant="contained"
-                    onClick={()=>{props.history.push('/viewUsers')}}
+                    onClick={() => { props.history.push('/viewUsers') }}
                     style={{ marginLeft: '303px', marginRight: '20px' }}
                     color="primary">
                     Cancel
@@ -208,8 +197,10 @@ const CreateUser = (props) => {
                     color="primary">
                     Save
                 </Button>
+                </div>
+                
             </Card>
-        </React.Fragment>
+        </div>
     );
 };
 

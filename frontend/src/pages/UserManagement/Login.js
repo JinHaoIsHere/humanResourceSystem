@@ -5,43 +5,42 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
+import { Link } from 'react-router-dom';
 //import classes from './Login.module.css';
 const Login = (props) => {
     const [form, setForm] = React.useState({
-        username: null,
+        email: null,
         password: null,
     });
 
     const onChangeHandler = (event) => {
         let updatedForm = { ...form };
-        if (event.target.id === 'loginName') {
-            updatedForm.username = event.target.value;
+        if (event.target.id === 'loginEmail') {
+            updatedForm.email = event.target.value;
         } else if (event.target.id === 'loginPw') {
             updatedForm.password = event.target.value;
         }
         setForm(updatedForm);
     }
     const onSubmitHandler = (event) => {
-        console.log(event);
+
         //validate
-        if (!form.username || !form.password) {
+        if (!form.email || !form.password) {
             return;
         }
         //send login info validation to API
         axios.post('/api/login', { ...form })
             .then(response => {
-                console.log(response.data);
-                if (response.data.userToken) {
-                    // get JWT token from backend
-                    // and save this token to redux
-                    props.onLoginToken(response.data.userToken, form.username, response.data.expireDate, response.data.permission);
+                if (response.data) {
+                    props.onLoginToken(response.data.userToken, response.data.userInfo);
                     props.history.push('/');
+                }else{
+                    props.createToastr('error', 'something went wrong');
                 }
-                else {
-                    props.createToastr('error', 'Wrong Username or Password');
-                }
+
             })
             .catch(error => {
+                console.log(error.response);
                 props.createToastr('error', error.response.data);
             });
     }
@@ -49,24 +48,40 @@ const Login = (props) => {
         card: {
             width: '500px',
             height: 'auto',
-            margin: '20px auto',
+            margin: '150px auto',
             padding: '30px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            padding: '30px 0',
+            borderRadius: '10px',
+            backgroundColor: '#F5F5F4',
         },
         marginTop: {
             marginTop: '20px',
+        },
+        forgetPw: {
+            width: '226px',
+            textAlign: 'left',
+            marginTop: '15px',
+            marginBottom: '-5px',
+            '& a': {
+                color: 'grey',
+                "&:hover": {
+                    color: '#1A1D1A'
+                }
+            }
         }
     }));
     const classes = useStyles();
     return (
         <div>
-            <Card className={classes.card}>
+            <div className={classes.card}>
+                <h1 style={{ width: '226px', textAlign: 'left' }}>Log In</h1>
                 <TextField
                     required
-                    id="loginName"
-                    label="UserName"
+                    id="loginEmail"
+                    label="Email"
                     onChange={onChangeHandler}
                     variant="outlined"
                 />
@@ -79,19 +94,23 @@ const Login = (props) => {
                     variant="outlined"
                     type="password"
                 />
+                <div className={classes.forgetPw}>
+                    <Link to='#'>Forget password?</Link>
+                </div>
                 <Button variant="contained"
                     onClick={onSubmitHandler}
+                    style={{ width: '226px' }}
                     className={classes.marginTop} color="primary">
                     Log In
                     </Button>
-            </Card>
+            </div>
         </div>
     );
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoginToken: (token, username, expireDate, permission) => dispatch(actions.loginUser(username, token, expireDate, permission)),
+        onLoginToken: (userToken, userInfo) => dispatch(actions.loginUser(userToken, userInfo)),
         createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }

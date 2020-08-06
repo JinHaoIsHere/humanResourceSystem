@@ -24,7 +24,7 @@ const UpdateUser = (props) => {
     const [form, setForm] = React.useState(null);
     const userId = props.match.params.id;
     const [openDialog, setOpenDialog] = React.useState(false);
-    
+
 
     const triggerDialog = (bol) => {
         setOpenDialog(bol);
@@ -52,10 +52,10 @@ const UpdateUser = (props) => {
         updatedForm.permission = newValue;
         setForm(updatedForm);
     }
-    
+
     const onDeleteHandler = () => {
         setOpenDialog(false);
-        axios.post('/api/admin/deleteUser', {userId: form._id})
+        axios.post('/api/admin/deleteUser', { userId: form._id })
             .then(response => {
                 props.createToastr('success', response.data);
                 props.history.push('/viewUsers');
@@ -128,21 +128,13 @@ const UpdateUser = (props) => {
     if (form) {
         userForm = (<form className={classes.form}>
             <TextField
-                className={classes.textField}
                 required
-                id="username"
-                label="UserName"
+                style={{ margin: '8px', width: '62.2ch', }}
+                id="email"
+                label="Email"
                 onChange={onChangeHandler}
                 variant="outlined"
-                value={form.username}
-            />
-            <TextField
-                className={classes.textField}
-                id="firstname"
-                label="FirstName"
-                onChange={onChangeHandler}
-                variant="outlined"
-                value={form.firstname}
+                value={form.email}
             />
             <TextField
                 className={classes.textField}
@@ -156,6 +148,22 @@ const UpdateUser = (props) => {
             />
             <TextField
                 className={classes.textField}
+                id="phone"
+                label="Phone"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.phone}
+            />
+            <TextField
+                className={classes.textField}
+                id="firstname"
+                label="FirstName"
+                onChange={onChangeHandler}
+                variant="outlined"
+                value={form.firstname}
+            />
+            <TextField
+                className={classes.textField}
                 id="lastname"
                 label="LastName"
                 onChange={onChangeHandler}
@@ -164,28 +172,11 @@ const UpdateUser = (props) => {
             />
             <TextField
                 className={classes.textField}
-                id="email"
-                label="Email"
-                onChange={onChangeHandler}
-                variant="outlined"
-                value={form.email}
-            />
-
-            <TextField
-                className={classes.textField}
                 id="role"
                 label="Role"
                 onChange={onChangeHandler}
                 variant="outlined"
                 value={form.role}
-            />
-            <TextField
-                className={classes.textField}
-                id="phone"
-                label="Phone"
-                onChange={onChangeHandler}
-                variant="outlined"
-                value={form.phone}
             />
             <TextField
                 className={classes.textField}

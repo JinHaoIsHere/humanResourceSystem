@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import TablePagination from '@material-ui/core/TablePagination';
 import AddIcon from '@material-ui/icons/Add';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
 import CardContent from '@material-ui/core/CardContent';
 import classes from './ViewUsers.module.css';
 import { connect } from 'react-redux';
@@ -64,12 +64,9 @@ const ViewUsers = (props) => {
     return (
         <React.Fragment>
             <div className={classes.PageHeader}>
-                <div className={classes.Icon}>
-                    <GroupIcon />
-                </div>
-                <h2>View Users</h2>
+                View Users
                 <Button variant="contained"
-                    color="primary" style={{ marginLeft: 'auto' }}
+                    color="primary" style={{ marginLeft: 'auto', height: '20px', backgroundColor: '#ff8c42'}}
                     onClick={() => { props.history.push('/createUser') }}><AddIcon /></Button>
             </div>
             <Card className={classes.Card}>

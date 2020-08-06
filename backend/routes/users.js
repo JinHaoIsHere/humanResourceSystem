@@ -16,25 +16,29 @@ router.post(
         client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
         db = client.db(config.db.name);
         let dCollection = db.collection('users');
-        let result = await dCollection.findOne({username: req.body.username});
-        if(!result){
+        let result = await dCollection.findOne({ email: req.body.email });
+        if (!result) {
             res.status(400).json('User not existed');
             return;
         }
-        if(!bcrypt.compare(req.body.password, result.password)){
+        if (!bcrypt.compare(req.body.password, result.password)) {
             res.status(400).json('Wrong password');
             return
         }
-        // console.log(result);
-        if(!result){
-            res.json({ userToken: null });
-            return;    
-        }
-        
-        const {token, expireDate} =  auth.sign(result);
+
+        const token = auth.sign(result);
         perm = result.permission;
         //console.log(expireDate);
-        res.json({ userToken: token, permission: perm, expireDate: expireDate });
+        res.json({
+            userToken: token,
+            userInfo: {
+                _id: result._id,
+                email: result.email,
+                permission: result.permission,
+                firstName: result.firstname,
+                lastName: result.lastname,
+            }
+        });
     }
 );
 
@@ -65,32 +69,34 @@ router.post(
             db = client.db(config.db.name);
             let userCollection = db.collection('users');
             const userInfo = req.body;
-            //validate the username which should be unique
-            const checkUser = await userCollection.findOne({username: userInfo.username});
-            if(checkUser){
-                res.status(400).json('User Existed');
-                return;
-            }
-                
+
             //validate the password, the length should be longer than 6
-            if(!userInfo.password || userInfo.password.length<6){
+            if (!userInfo.password || userInfo.password.length < 6) {
                 res.status(400).json('Password should be longer than 6');
                 return;
             }
             //validate the format of email address
             const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
-            if(userInfo.email && !emailReg.test(userInfo.email)){
+            if (!userInfo.email || !emailReg.test(userInfo.email)) {
                 res.status(400).json('Invalid Email address');
                 return;
             }
-            if(!userInfo.permission || !Array.isArray(userInfo.permission)){
+
+            //validate the email which should be unique
+            const checkUser = await userCollection.findOne({ email: userInfo.email });
+            if (checkUser) {
+                res.status(400).json('This Email has been used');
+                return;
+            }
+
+            if (!userInfo.permission || !Array.isArray(userInfo.permission)) {
                 userInfo.permission = [];
             }
 
             //encrypt the password
             const updatedPassword = bcrypt.hash(userInfo.password);
-            const updatedInfo = {...userInfo, password: updatedPassword};
-            let result = await userCollection.insert(updatedInfo);
+            const updatedInfo = { ...userInfo, password: updatedPassword };
+            await userCollection.insert(updatedInfo);
             res.json('Created successfully');
         }
         catch (err) { console.log(err); }
@@ -107,48 +113,48 @@ router.post(
             db = client.db(config.db.name);
             let userCollection = db.collection('users');
 
-            const userInfo = {...req.body};
-            //validate the username which should be unique
-            const checkUser = await userCollection.findOne({username: userInfo.username});          
+            const userInfo = { ...req.body };
+            //validate the email which should be unique
+            const checkUser = await userCollection.findOne({ email: userInfo.email });
 
-            if(checkUser && checkUser._id.toString() !== userInfo._id){
-                res.status(400).json('User Existed');
+            if (checkUser && checkUser._id.toString() !== userInfo._id) {
+                res.status(400).json('This Email has been used');
                 return;
             }
             delete userInfo._id; //don't have to update _id field
             //validate the password, the length should be longer than 6
-            if(!userInfo.password)
+            if (!userInfo.password)
                 delete userInfo.password;
-            else if(userInfo.password.length<6){
+            else if (userInfo.password.length < 6) {
                 res.status(400).json('Password should be longer than 6');
                 return;
-            }else{
+            } else {
                 const updatedPassword = bcrypt.hash(userInfo.password);
-                userInfo.password=updatedPassword;
+                userInfo.password = updatedPassword;
             }
             //validate the format of email address
             const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
-            if(userInfo.email && !emailReg.test(userInfo.email)){
+            if (!userInfo.email || !emailReg.test(userInfo.email)) {
                 res.status(400).json('Invalid Email address');
                 return;
             }
-            if(!userInfo.permission || !Array.isArray(userInfo.permission)){
+            if (!userInfo.permission || !Array.isArray(userInfo.permission)) {
                 userInfo.permission = [];
             }
-            
+
             let result = await userCollection.updateOne(
-                {_id: ObjectId(req.body._id)}, 
-                {$set: userInfo});
-            if(!result){
+                { _id: ObjectId(req.body._id) },
+                { $set: userInfo });
+            if (!result) {
                 res.status(400).json('Update failed');
-            }else{
-                if(result.result.ok){
+            } else {
+                if (result.result.ok) {
                     res.json('Update Completed');
-                }else{
+                } else {
                     res.status(400).json('Update failed');
                 }
             }
-            
+
         }
         catch (err) { console.log(err); }
         finally { client.close(); }
@@ -163,13 +169,13 @@ router.get(
             client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
             db = client.db(config.db.name);
             let dCollection = db.collection('users');
-            let result = await dCollection.findOne({_id: ObjectId(req.query.id)});
-            if(!result){
+            let result = await dCollection.findOne({ _id: ObjectId(req.query.id) });
+            if (!result) {
                 res.status(400).json('Wrong User ID');
-            }else{
+            } else {
                 res.json({ user: result });
             }
-            
+
         }
         catch (err) { console.error(err); }
         finally { client.close(); }
@@ -184,13 +190,13 @@ router.post(
             client = await mongoClient.connect(config.db.url, { useNewUrlParser: true, useUnifiedTopology: true });
             db = client.db(config.db.name);
             let dCollection = db.collection('users');
-            let result = await dCollection.deleteOne({_id: ObjectId(req.body.userId)});
-            if(!result){
+            let result = await dCollection.deleteOne({ _id: ObjectId(req.body.userId) });
+            if (!result) {
                 res.status(400).json('Wrong User ID');
-            }else{
+            } else {
                 res.json('Delete successfully');
             }
-            
+
         }
         catch (err) { console.error(err); }
         finally { client.close(); }

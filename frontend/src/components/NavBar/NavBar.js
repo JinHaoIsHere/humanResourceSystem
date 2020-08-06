@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 // import DraftsIcon from '@material-ui/icons/Drafts';
 // import SendIcon from '@material-ui/icons/Send';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 // import * as actionTypes from '../../store/actions/actionTypes';
 import * as actions from '../../store/actions';
@@ -59,7 +60,35 @@ const NavBar = (props) => {
     }));
     const classes = useStyles();
 
-
+    const currentPath = props.history.location.pathname;
+    let userIcon = null;
+    if(props.currentUser){
+        userIcon = (<React.Fragment><div style={{
+            backgroundColor: '#eee',
+            borderRadius: '50%',
+            flex: '0 0 30px',
+            height: '30px'
+        }}
+            onClick={handleClick}>
+        </div>
+        <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+    >
+        <MenuItem>
+            <ListItemText primary={props.currentUser} />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+            <ListItemText primary="Log Out" onClick={()=>{props.onLogOut();}}/>
+        </MenuItem>
+    </StyledMenu></React.Fragment>);
+    }else if(currentPath!=='/login'){
+        userIcon = (<div className={myclasses.Login}><Link to="/login" > LOG IN </Link></div>);
+    }
 
     return (
         <React.Fragment>
@@ -76,30 +105,9 @@ const NavBar = (props) => {
                         {props.currentUserPerm.indexOf(permissions.CONTRACT_MANAGEMENT)>=0 ? <li><Link to="/viewContracts" > CONTRACT </Link></li> : null}
                         {props.currentUserPerm.indexOf(permissions.USER_MANAGEMENT)>=0 ? <li><Link to="/viewUsers" > USERS </Link></li> : null}
                     </ul>
-
-                    <div style={{
-                        backgroundColor: '#eee',
-                        borderRadius: '50%',
-                        flex: '0 0 30px',
-                        height: '30px'
-                    }}
-                        onClick={handleClick}>
-                    </div>
-                    <StyledMenu
-                        id="customized-menu"
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <MenuItem>
-                            <ListItemText primary={props.currentUser} />
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem>
-                            <ListItemText primary="Log Out" onClick={()=>{props.onLogOut();}}/>
-                        </MenuItem>
-                    </StyledMenu>
+                    {userIcon}
+                    
+                    
                 </Toolbar>
             </AppBar>
         </React.Fragment>
@@ -116,4 +124,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NavBar));

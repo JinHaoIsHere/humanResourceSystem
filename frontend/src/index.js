@@ -18,8 +18,8 @@ import {restoreUser} from './store/actions/users';
 axios.interceptors.request.use(request => {
   const currentUserStr = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserStr);
-  if (currentUser && currentUser.token) {
-    request.headers.common['Authorization'] = 'Bearer ' + currentUser.token;
+  if (currentUser && currentUser.userToken) {
+    request.headers.common['Authorization'] = 'Bearer ' + currentUser.userToken.token;
   }
   return request;
 }, error => {
