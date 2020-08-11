@@ -22,12 +22,12 @@ const Layout = (props) => {
         
     }, [currentUser]);
 
-    const curUsr = props.usersList.find(item=>item.username==props.currentUser);
+    // const curUsr = props.usersList.find(item=>item.username==props.currentUser);
     
     let activeContract = [];
-    if(curUsr && props.contractList){
+    if(props.currentUserId && props.contractList){
         activeContract=props.contractList.filter(item=>{
-            return item.employee===curUsr._id;
+            return item.employee===props.currentUserId;
         });
     }
     return (
@@ -47,6 +47,7 @@ const Layout = (props) => {
 const mapStateToProps = state => {
     return {
         currentUser: state.user.currentLogInUser,
+        currentUserId: state.user.currentLogInUserId,
         currentUserPerm: state.user.currentLogInUserPerm,
         contractList: state.contract.contractList,
         usersList: state.user.usersList,

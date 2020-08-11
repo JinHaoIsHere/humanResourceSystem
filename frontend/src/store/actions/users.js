@@ -18,6 +18,7 @@ export const restoreUser = () => {
             dispatch({
                 type: actionTypes.LOGIN,
                 username: currentUser.userInfo.firstName + ' ' + currentUser.userInfo.lastName,
+                userid: currentUser.userInfo._id,
                 email: currentUser.userInfo.email,
                 permission: currentUser.userInfo.permission,
                 token: currentUser.userToken.token,
@@ -37,6 +38,7 @@ export const loginUser = (userToken, userInfo) => {
     return {
         type: actionTypes.LOGIN,
         username: userInfo.firstName + ' ' + userInfo.lastName,
+        userid: userInfo._id,
         email: userInfo.email,
         permission: userInfo.permission,
         token: userToken.token,
@@ -59,6 +61,7 @@ export const fetchUserList = () => {
                 dispatch({ type: actionTypes.SET_USERS_LIST, usersList: res.data.userslist })
             })
             .catch(err => {
+                console.log(err);
                 createToastrHelper(dispatch, 'error', err.response.data);
             })
     }

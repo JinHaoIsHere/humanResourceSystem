@@ -9,6 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import classes from './ViewUsers.module.css';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
+import { makeStyles } from '@material-ui/core/styles';
 
 const ViewUsers = (props) => {
     // const [usersList, setUsers] = useState(null);
@@ -26,6 +27,39 @@ const ViewUsers = (props) => {
     let rows = (
         <TableRow><TableCell align="center">Loading...</TableCell></TableRow>
     );
+    const useStyles = makeStyles((theme) => ({
+        table: {
+            '& th':{
+                fontWeight: 'bold',
+                fontFamily: 'Chilanka',
+            },
+            '& td': {
+                fontFamily: 'Chilanka',
+            },
+            '& .MuiTypography-colorInherit':{
+                fontFamily: 'Chilanka',                
+            },
+            '& p':{
+                fontFamily: 'Chilanka',
+            }
+        },
+        tablePag:{
+            '& .MuiTypography-colorInherit':{
+                fontFamily: 'Chilanka',                
+            },
+            '& .MuiSelect-root':{
+                fontFamily: 'Chilanka',                
+            },
+            '& .MuiButtonBase-root':{
+                fontFamily: 'Chilanka',                
+
+            },
+            '& .MuiSvgIcon-root':{
+                color: '#ff8c42'
+            }
+        }
+    }));
+    const myclasses = useStyles();
     let pagination = null; //To prevent reading thouse variable before fetching usersList from backend
     if (props.usersList != null) {
         rows = (rowsPerPage > 0
@@ -33,11 +67,16 @@ const ViewUsers = (props) => {
             : props.usersList
         ).map((user) => {
             const perm = Array.isArray(user.permission) ? user.permission.join(', ') : '';
+            const lastName = user.lastname?user.lastname:'';
+            const userName = (user.firstname?user.firstname:'') + ' ' + lastName;
+            
+            console.log(user.lastname?user.lastname:'');
+            console.log(userName);
             return (
                 <TableRow key={user._id} onClick={()=>{props.history.push('/updateUser/'+user._id)}}>
-                    <TableCell align="center">{user.username}</TableCell>
-                    <TableCell align="center">{user.firstname}</TableCell>
-                    <TableCell align="center">{user.lastname}</TableCell>
+                    {/* <TableCell align="center">{user.username}</TableCell> */}
+                    {/* <TableCell align="center">{user.firstname}</TableCell> */}
+                    <TableCell align="center">{userName}</TableCell>
                     {/* <TableCell align="center">{user.password}</TableCell> */}
                     <TableCell align="center">{user.email}</TableCell>
                     <TableCell align="center">{user.phone}</TableCell>
@@ -49,6 +88,7 @@ const ViewUsers = (props) => {
         });
         pagination = (
             <TablePagination
+                className={myclasses.tablePag}
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={props.usersList.length}
@@ -60,6 +100,7 @@ const ViewUsers = (props) => {
         );
     }
 
+    
 
     return (
         <React.Fragment>
@@ -71,13 +112,11 @@ const ViewUsers = (props) => {
             </div>
             <Card className={classes.Card}>
                 <CardContent>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead style={{ backgroundColor: '#7EB4F1' }}>
+                    <TableContainer style={{width: '90%', margin: '0 auto'}}>
+                        <Table aria-label="simple table" className={myclasses.table}>
+                            <TableHead style={{ fontWeight:'bold' }}>
                                 <TableRow>
-                                    <TableCell align="center">User Name</TableCell>
-                                    <TableCell align="center">First Name</TableCell>
-                                    <TableCell align="center">Last Name</TableCell>
+                                    <TableCell align="center" style={{width:'150px'}}>Name</TableCell>
                                     {/* <TableCell align="center">Password</TableCell> */}
                                     <TableCell align="center">Email</TableCell>
                                     <TableCell align="center">Phone</TableCell>

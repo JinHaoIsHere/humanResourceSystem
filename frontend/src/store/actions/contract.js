@@ -13,6 +13,7 @@ export const fetchContracts = () => {
                 dispatch({ type: actionTypes.SET_CONTRACT_LIST, contractList: res.data.contractList })
             })
             .catch(err => {
+                console.log(err);
                 createToastrHelper(dispatch, 'error', err.response.data);
             })
     }

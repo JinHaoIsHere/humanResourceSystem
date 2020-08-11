@@ -10,12 +10,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MaterialTable from 'material-table';
 import { forwardRef } from 'react';
 import axios from 'axios';
-
+import { makeStyles } from '@material-ui/core/styles';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
-
+import Card from '../../components/Card/Card';
 const tableIcons = {
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
     LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
@@ -41,60 +41,124 @@ const ReviewTimesheet = (props) => {
     };
 
 
-    const onSaveSheet =(status)=>{
-        const curContract = props.contractList.find(item=>item._id == curContractId);
+    const onSaveSheet = (status) => {
+        const curContract = props.contractList.find(item => item._id == curContractId);
 
         const updateContract = {
             _id: curContractId,
             timesheet: {
                 ...curContract.timesheet,
                 [curDate]: {
-                    data:confirmSheet,
+                    data: confirmSheet,
                     status: status,
                 },
             }
         }
         axios.post('/api/contract/update', updateContract)
-                .then(response => {
-                    props.createToastr('success', response.data);
-                    if(status == 'CONFIRMED')
-                        props.createToastr('success', 'Timesheet was confirmed!');
-                    if(status == 'EDITING')
-                        props.createToastr('success', 'Timesheet was declined!');
-                    //props.history.push('/viewContracts');
-                    props.fetchContracts();
-                    setOpen(false);
+            .then(response => {
+                props.createToastr('success', response.data);
+                if (status == 'CONFIRMED')
+                    props.createToastr('success', 'Timesheet was confirmed!');
+                if (status == 'EDITING')
+                    props.createToastr('success', 'Timesheet was declined!');
+                //props.history.push('/viewContracts');
+                props.fetchContracts();
+                setOpen(false);
 
-                }).catch(error => {
-                    props.createToastr('error', error.response.data);
-                    setOpen(false);
-                });
+            }).catch(error => {
+                props.createToastr('error', error.response.data);
+                setOpen(false);
+            });
     };
 
-    const curUsr = props.usersList.find(item => item.username == props.currentUser);
+    //const curUsr = props.usersList.find(item => item.username == props.currentUser);
     let managedContract = [];
-    if (curUsr && props.contractList) {
+    if (props.currentUserId && props.contractList) {
         managedContract = props.contractList.filter(item => {
-            return item.manager === curUsr._id;
+            return item.manager === props.currentUserId;
         });
     }
+    console.log(managedContract);
+    const useStyles = makeStyles((theme) => ({
+        card: {
+            width: '900px',
+            margin: '0 auto'
+        },
+        form: {
+            width: '600px',
+            margin: '0 auto',
+        },
+        textField: {
+            margin: theme.spacing(1),
+            width: '30ch',
+        },
+        button: {
+            marginRight: '20px',
+            float: 'right',
+        },
+        pageHeader: {
+            display: 'flex',
+            width: '900px',
+            padding: '20px',
+            alignItems: 'center',
+            margin: '0 auto',
+        },
+        icon: {
+            width: '60px',
+            height: '60px',
+            backgroundColor: '#ECF4FD',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '5px',
+            marginRight: '20px',
+        },
+        grid: {
+            display: 'grid',
+            gridTemplateColumns: '30px 100px 200px 150px 150px',
+            // width: '700px',
+        },
+        title: {
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            borderBottom: '2px solid #1A1D1A',
+        }
+    }));
+    const classes = useStyles();
     // console.log(managedContract);
     const managedTimesheet = managedContract.reduce((acc, curr) => {
 
         const userName = props.usersList.find(item => curr.employee == item._id)['username'];
         const sheets = Object.keys(curr.timesheet).map(date => {
-            return { ...curr.timesheet[date], date: date, employee: userName, contractId: curr._id };
+            return { ...curr.timesheet[date], date: date, employee: userName, contractId: curr._id, projectName: curr.contractName };
         })
         acc.push(...sheets);
         return acc;
     }, [])
-    // console.log(managedTimesheet);
-    let sheetList = null;
+    console.log(managedTimesheet);
+    let tmpSheetList = null;
 
-    sheetList = managedTimesheet.map((item, index) => {
+    // sheetList = managedTimesheet.map((item, index) => {
+    //     // console.log(item.data);
+    //     return <div key={index} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.employee} - {item.date} - {item.status}</div>
+    // })
+    tmpSheetList = managedTimesheet.map((item, index) => {
         // console.log(item.data);
-        return <div key={index} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.employee} - {item.date} - {item.status}</div>
-    })
+        //  
+        let statusStyle = null;
+        if(item.status=="PENDING"){
+            statusStyle={color: 'red'};
+        }else if(item.status=="CONFIRMED"){
+            statusStyle={color: 'green'};
+        }else{
+            statusStyle={color: 'orange'};
+        }
+        return <React.Fragment ><div key={'c1_'+index}>{index+1}</div>
+        <div key={'c2_'+index}>{item.employee}</div>
+        <div key={'c3_'+index}>{item.projectName}</div>
+        <div key={'c4_'+index}>{item.date}</div>
+        <div key={'c5_'+index} style={statusStyle} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.status}</div></React.Fragment>
+    });
     const columns = [
         { title: 'Task Name', field: 'task' },
         { title: 'Monday', field: 'time1', type: 'numeric' },
@@ -157,8 +221,16 @@ const ReviewTimesheet = (props) => {
     }
     return (
         <React.Fragment>
-            <div>{sheetList}</div>
-            {dialog}
+            <div className={classes.pageHeader}>
+                Review Timesheet
+            </div>
+            <Card className={classes.card}>
+                <div className={classes.grid}>
+                <div className={classes.title}>#</div> <div className={classes.title}>EMPLOYEE</div><div className={classes.title}>PROJECT NAME</div><div className={classes.title}>DATE</div><div className={classes.title}>STATUS</div>
+                    {tmpSheetList}</div>
+                {dialog}
+            </Card>
+
         </React.Fragment>)
 }
 
@@ -167,6 +239,7 @@ const mapStateToProps = state => {
         contractList: state.contract.contractList,
         usersList: state.user.usersList,
         currentUser: state.user.currentLogInUser,
+        currentUserId: state.user.currentLogInUserId,
     }
 }
 const mapDispatchToProps = dispatch => {

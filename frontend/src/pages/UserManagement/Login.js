@@ -40,7 +40,7 @@ const Login = (props) => {
 
             })
             .catch(error => {
-                console.log(error.response);
+                console.log(error);
                 props.createToastr('error', error.response.data);
             });
     }
