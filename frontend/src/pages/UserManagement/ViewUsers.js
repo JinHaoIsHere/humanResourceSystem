@@ -10,12 +10,15 @@ import classes from './ViewUsers.module.css';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import { makeStyles } from '@material-ui/core/styles';
-
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import SearchIcon from '@material-ui/icons/Search';
+import Input from '@material-ui/core/Input';
 const ViewUsers = (props) => {
     // const [usersList, setUsers] = useState(null);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    const [search, setSearch] = React.useState('');
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
@@ -29,51 +32,66 @@ const ViewUsers = (props) => {
     );
     const useStyles = makeStyles((theme) => ({
         table: {
-            '& th':{
+            '& th': {
                 fontWeight: 'bold',
+            },
+            '& *': {
                 fontFamily: 'Chilanka',
             },
-            '& td': {
-                fontFamily: 'Chilanka',
-            },
-            '& .MuiTypography-colorInherit':{
-                fontFamily: 'Chilanka',                
-            },
-            '& p':{
-                fontFamily: 'Chilanka',
-            }
         },
-        tablePag:{
-            '& .MuiTypography-colorInherit':{
-                fontFamily: 'Chilanka',                
+        tablePag: {
+            '& .MuiToolbar-root *': {
+                fontFamily: 'Chilanka',
             },
-            '& .MuiSelect-root':{
-                fontFamily: 'Chilanka',                
-            },
-            '& .MuiButtonBase-root':{
-                fontFamily: 'Chilanka',                
-
-            },
-            '& .MuiSvgIcon-root':{
+            '& .MuiSvgIcon-root': {
                 color: '#ff8c42'
             }
         }
     }));
     const myclasses = useStyles();
+
+    const onChangeHandler = (event) => {
+        if (!event) return;
+
+        setSearch(event.target.value);
+    }
+
+    console.log('rendering');
+
     let pagination = null; //To prevent reading thouse variable before fetching usersList from backend
     if (props.usersList != null) {
+
+        let entireUserList = props.usersList;
+        if (search) {
+            entireUserList = entireUserList.filter(item => {
+                if (item.firstname && item.firstname.includes(search))
+                    return true;
+                else if (item.lastname && item.lastname.includes(search))
+                    return true;
+                else if (item.email && item.email.includes(search))
+                    return true;
+                else if (item.title && item.title.includes(search))
+                    return true;
+                else if (item.phone && item.phone.includes(search))
+                    return true;
+                else if (item.role && item.role.includes(search))
+                    return true;
+                return false;
+            });
+        }
+
         rows = (rowsPerPage > 0
-            ? props.usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : props.usersList
+            ? entireUserList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : entireUserList
         ).map((user) => {
             const perm = Array.isArray(user.permission) ? user.permission.join(', ') : '';
-            const lastName = user.lastname?user.lastname:'';
-            const userName = (user.firstname?user.firstname:'') + ' ' + lastName;
-            
-            console.log(user.lastname?user.lastname:'');
+            const lastName = user.lastname ? user.lastname : '';
+            const userName = (user.firstname ? user.firstname : '') + ' ' + lastName;
+
+            console.log(user.lastname ? user.lastname : '');
             console.log(userName);
             return (
-                <TableRow key={user._id} onClick={()=>{props.history.push('/updateUser/'+user._id)}}>
+                <TableRow key={user._id} onClick={() => { props.history.push('/updateUser/' + user._id) }}>
                     {/* <TableCell align="center">{user.username}</TableCell> */}
                     {/* <TableCell align="center">{user.firstname}</TableCell> */}
                     <TableCell align="center">{userName}</TableCell>
@@ -91,7 +109,7 @@ const ViewUsers = (props) => {
                 className={myclasses.tablePag}
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={props.usersList.length}
+                count={entireUserList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -100,23 +118,34 @@ const ViewUsers = (props) => {
         );
     }
 
-    
+
 
     return (
         <React.Fragment>
             <div className={classes.PageHeader}>
                 View Users
                 <Button variant="contained"
-                    color="primary" style={{ marginLeft: 'auto', height: '20px', backgroundColor: '#ff8c42'}}
+                    color="primary" style={{ marginLeft: 'auto', height: '20px', backgroundColor: '#ff8c42' }}
                     onClick={() => { props.history.push('/createUser') }}><AddIcon /></Button>
             </div>
             <Card className={classes.Card}>
                 <CardContent>
-                    <TableContainer style={{width: '90%', margin: '0 auto'}}>
+                    <div style={{ width: '90%', margin: '0 auto' }} >
+                        <Grid container spacing={1} alignItems="flex-end" justify="flex-end">
+                            <Grid item>
+                                <SearchIcon />
+                            </Grid>
+                            <Grid item>
+                                <Input placeholder="Search" inputProps={{ 'aria-label': 'description' }} value={search} onChange={onChangeHandler} />
+                            </Grid>
+                        </Grid>
+                    </div>
+
+                    <TableContainer style={{ width: '90%', margin: '0 auto' }}>
                         <Table aria-label="simple table" className={myclasses.table}>
-                            <TableHead style={{ fontWeight:'bold' }}>
+                            <TableHead style={{ fontWeight: 'bold' }}>
                                 <TableRow>
-                                    <TableCell align="center" style={{width:'150px'}}>Name</TableCell>
+                                    <TableCell align="center" style={{ width: '150px' }}>Name</TableCell>
                                     {/* <TableCell align="center">Password</TableCell> */}
                                     <TableCell align="center">Email</TableCell>
                                     <TableCell align="center">Phone</TableCell>
