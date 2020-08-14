@@ -4,9 +4,11 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import TablePagination from '@material-ui/core/TablePagination';
 import AddIcon from '@material-ui/icons/Add';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
 import CardContent from '@material-ui/core/CardContent';
-
+import Grid from '@material-ui/core/Grid';
+import SearchIcon from '@material-ui/icons/Search';
+import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
@@ -14,7 +16,8 @@ import moment from 'moment';
 
 const ViewContracts = (props) => {
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [search, setSearch] = React.useState('');
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -24,68 +27,22 @@ const ViewContracts = (props) => {
         setPage(newPage);
     };
 
-    let rows = (
-        <TableRow><TableCell align="center">Loading...</TableCell></TableRow>
-    );
-    let pagination = null; 
-    if (props.contractList != null) {
-        rows = (rowsPerPage > 0
-            ? props.contractList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : props.contractList
-        ).map((contract) => {
-            const employee = props.usersList.filter(item=>{
-                return item._id==contract.employee
-            });
-            let employeeName = '';
-            
-            if(employee.length){
-                employeeName=employee[0].username;
-            }
-            const manager = props.usersList.filter(item=>{
-                return item._id==contract.manager
-            });
-            let managerName = '';
-            
-            if(manager.length){
-                managerName=manager[0].username;
-            }
-            return (
-                <TableRow key={contract._id} onClick={()=>{props.history.push('/updateContract/'+contract._id)}}>
-                    <TableCell align="center">{contract.contractName}</TableCell>
-                    <TableCell align="center">{employeeName}</TableCell>
-                    <TableCell align="center">{contract.employer}</TableCell>
-                    <TableCell align="center">{managerName}</TableCell>
-                    <TableCell align="center">{contract.startDate?moment(contract.startDate).format('YYYY-MM-DD'):null}</TableCell>
-                    <TableCell align="center">{contract.endDate?moment(contract.endDate).format('YYYY-MM-DD'):null}</TableCell>
-                </TableRow>
-            )
-        });
-        pagination = (
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={props.contractList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-        );
+    const onSearchHandler = (event) => {
+        if (!event) return;
+        setSearch(event.target.value);
     }
 
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1000px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
+            width: '900px',
+            margin: '0 auto'
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
+            margin: '0 auto',
         },
         icon: {
             width: '60px',
@@ -96,26 +53,121 @@ const ViewContracts = (props) => {
             alignItems: 'center',
             borderRadius: '5px',
             marginRight: '20px',
+        },
+        table: {
+            '& th': {
+                fontWeight: 'bold',
+            },
+            '& *': {
+                fontFamily: 'Chilanka',
+            },
+        },
+        tablePag: {
+            '& .MuiToolbar-root *': {
+                fontFamily: 'Chilanka',
+            },
+            '& .MuiSvgIcon-root': {
+                color: '#ff8c42'
+            }
         }
     }));
     const classes = useStyles();
 
+    let rows = (
+        <TableRow><TableCell align="center">Loading...</TableCell></TableRow>
+    );
+    let pagination = null;
+    if (props.contractList != null) {
+
+        let entireContractList = props.contractList;
+        if (search) {
+            entireContractList = entireContractList.filter(item => {
+                if (item.firstname && item.firstname.includes(search))
+                    return true;
+                else if (item.lastname && item.lastname.includes(search))
+                    return true;
+                else if (item.email && item.email.includes(search))
+                    return true;
+                else if (item.title && item.title.includes(search))
+                    return true;
+                else if (item.phone && item.phone.includes(search))
+                    return true;
+                else if (item.role && item.role.includes(search))
+                    return true;
+                return false;
+            });
+        }
+
+        rows = (rowsPerPage > 0
+            ? props.contractList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : props.contractList
+        ).map((contract) => {
+            const employee = props.usersList.filter(item => {
+                return item._id == contract.employee
+            });
+            let employeeName = '';
+
+            if (employee.length) {
+                employeeName = employee[0].username;
+            }
+            const manager = props.usersList.filter(item => {
+                return item._id == contract.manager
+            });
+            let managerName = '';
+
+            if (manager.length) {
+                managerName = manager[0].username;
+            }
+            return (
+                <TableRow key={contract._id} onClick={() => { props.history.push('/updateContract/' + contract._id) }}>
+                    <TableCell align="center">{contract.contractName}</TableCell>
+                    <TableCell align="center">{employeeName}</TableCell>
+                    <TableCell align="center">{contract.employer}</TableCell>
+                    <TableCell align="center">{managerName}</TableCell>
+                    <TableCell align="center">{contract.startDate ? moment(contract.startDate).format('YYYY-MM-DD') : null}</TableCell>
+                    <TableCell align="center">{contract.endDate ? moment(contract.endDate).format('YYYY-MM-DD') : null}</TableCell>
+                </TableRow>
+            )
+        });
+        pagination = (
+            <TablePagination
+                className={classes.tablePag}
+                rowsPerPageOptions={[10, 25, 50]}
+                component="div"
+                count={props.contractList.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+        );
+    }
+
+
+
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <GroupIcon />
-                </div>
-                <h2>View Contracts</h2>
+                View Contracts
                 <Button variant="contained"
-                    color="primary" style={{ marginLeft: 'auto' }}
+                    color="primary" style={{ marginLeft: 'auto', height: '20px', backgroundColor: '#ff8c42' }}
                     onClick={() => { props.history.push('/createContract') }}><AddIcon /></Button>
             </div>
             <Card className={classes.card}>
                 <CardContent>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead style={{ backgroundColor: '#7EB4F1' }}>
+                    <div style={{ width: '850px', margin: '0 auto' }} >
+                        <Grid container spacing={1} alignItems="flex-end" justify="flex-end">
+                            <Grid item>
+                                <SearchIcon />
+                            </Grid>
+                            <Grid item>
+                                <Input placeholder="Search" inputProps={{ 'aria-label': 'description' }} value={search} onChange={onSearchHandler} />
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <TableContainer style={{ width: '850px', margin: '0 auto' }}>
+                        <Table aria-label="simple table" className={classes.table}>
+                            <TableHead>
                                 <TableRow>
                                     <TableCell align="center">Contract Name</TableCell>
                                     <TableCell align="center">Employee</TableCell>

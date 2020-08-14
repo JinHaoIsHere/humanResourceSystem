@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
-import GroupIcon from '@material-ui/icons/Group';
 import Card from '../../components/Card/Card';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
@@ -96,7 +95,7 @@ const CreateUser = (props) => {
             <div className={classes.pageHeader}>
                 Create Users
             </div>
-            
+
             <Card className={classes.card}>
                 <form className={classes.form}>
                     <TextField
@@ -184,21 +183,21 @@ const CreateUser = (props) => {
                     />
                 </form>
                 <div>
-                <Button
-                    variant="contained"
-                    onClick={() => { props.history.push('/viewUsers') }}
-                    style={{ marginLeft: '303px', marginRight: '20px' }}
-                    color="primary">
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={onSubmitHandler}
-                    color="primary">
-                    Save
-                </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => { props.history.push('/viewUsers') }}
+                        style={{ marginLeft: '303px', marginRight: '20px' }}
+                        color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={onSubmitHandler}
+                        color="primary">
+                        Save
+                    </Button>
                 </div>
-                
+
             </Card>
         </div>
     );

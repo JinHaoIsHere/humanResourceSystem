@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
@@ -17,6 +17,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import permissions from '../../utils/permissions';
+import Spinner from '../../components/Spinner/Spinner';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -86,10 +87,8 @@ const UpdateUser = (props) => {
     }
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1000px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
+            width: '900px',
+            margin: '0 auto'
         },
         form: {
             width: '600px',
@@ -105,10 +104,10 @@ const UpdateUser = (props) => {
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
+            margin: '0 auto',
         },
         icon: {
             width: '60px',
@@ -124,7 +123,7 @@ const UpdateUser = (props) => {
     const classes = useStyles();
     const permissionOptions = Object.keys(permissions);
 
-    let userForm = null;
+    let userForm = <Spinner />;
     if (form) {
         userForm = (<form className={classes.form}>
             <TextField
@@ -224,33 +223,33 @@ const UpdateUser = (props) => {
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <GroupIcon />
-                </div>
-                <h2>Update Users</h2>
+                Update User
             </div>
             <Card className={classes.card}>
                 {userForm}
-                <Button
-                    variant="contained"
-                    onClick={triggerDialog.bind(this, true)}
-                    color="secondary"
-                    startIcon={<DeleteIcon />}>
-                    Delete
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => { props.history.push('/viewUsers') }}
-                    style={{ marginLeft: '190px', marginRight: '20px' }}
-                    color="primary">
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={onSubmitHandler}
-                    color="primary">
-                    Save
-                </Button>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={triggerDialog.bind(this, true)}
+                        color="secondary"
+                        startIcon={<DeleteIcon />}>
+                        Delete
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => { props.history.push('/viewUsers') }}
+                        style={{ marginLeft: '190px', marginRight: '20px' }}
+                        color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={onSubmitHandler}
+                        color="primary">
+                        Save
+                    </Button>
+                </div>
+
             </Card>
             <Dialog
                 open={openDialog}

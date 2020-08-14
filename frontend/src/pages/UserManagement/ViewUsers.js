@@ -17,7 +17,7 @@ import Input from '@material-ui/core/Input';
 const ViewUsers = (props) => {
     // const [usersList, setUsers] = useState(null);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [search, setSearch] = React.useState('');
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -107,7 +107,7 @@ const ViewUsers = (props) => {
         pagination = (
             <TablePagination
                 className={myclasses.tablePag}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[10, 25, 50]}
                 component="div"
                 count={entireUserList.length}
                 rowsPerPage={rowsPerPage}
@@ -130,7 +130,7 @@ const ViewUsers = (props) => {
             </div>
             <Card className={classes.Card}>
                 <CardContent>
-                    <div style={{ width: '90%', margin: '0 auto' }} >
+                    <div style={{ width: '850px', margin: '0 auto' }} >
                         <Grid container spacing={1} alignItems="flex-end" justify="flex-end">
                             <Grid item>
                                 <SearchIcon />
@@ -141,7 +141,7 @@ const ViewUsers = (props) => {
                         </Grid>
                     </div>
 
-                    <TableContainer style={{ width: '90%', margin: '0 auto' }}>
+                    <TableContainer style={{ width: '850px', margin: '0 auto' }}>
                         <Table aria-label="simple table" className={myclasses.table}>
                             <TableHead style={{ fontWeight: 'bold' }}>
                                 <TableRow>

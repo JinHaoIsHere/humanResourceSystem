@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
+
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
@@ -106,10 +107,8 @@ const UpdateContract = (props) => {
 
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1000px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
+            width: '900px',
+            margin: '0 auto'
         },
         form: {
             width: '600px',
@@ -126,10 +125,10 @@ const UpdateContract = (props) => {
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
+            margin: '0 auto',
         },
         icon: {
             width: '60px',
@@ -243,33 +242,33 @@ const UpdateContract = (props) => {
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <GroupIcon />
-                </div>
-                <h2>Update Contract</h2>
+                Update Contract
             </div>
             <Card className={classes.card}>
                 {contractForm}
-                <Button
-                    variant="contained"
-                    onClick={triggerDialog.bind(this, true)}
-                    color="secondary"
-                    startIcon={<DeleteIcon />}>
-                    Delete
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => { props.history.push('/viewContracts') }}
-                    style={{ marginLeft: '190px', marginRight: '20px' }}
-                    color="primary">
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={onSubmitHandler}
-                    color="primary">
-                    Save
-                </Button>
+                <div>
+
+                    <Button
+                        variant="contained"
+                        onClick={triggerDialog.bind(this, true)}
+                        color="secondary"
+                        startIcon={<DeleteIcon />}>
+                        Delete
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => { props.history.push('/viewContracts') }}
+                        style={{ marginLeft: '190px', marginRight: '20px' }}
+                        color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={onSubmitHandler}
+                        color="primary">
+                        Save
+                    </Button>
+                </div>
             </Card>
             <Dialog
                 open={openDialog}

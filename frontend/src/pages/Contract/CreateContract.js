@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
-import Card from '@material-ui/core/Card';
+import Card from '../../components/Card/Card';
+
 import * as actions from '../../store/actions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
@@ -56,11 +57,11 @@ const CreateContract = (props) => {
         if (!form.startDate || !form.endDate) {
             props.createToastr('error', 'Contract Date is required');
             pass = false;
-        }else if(form.startDate.getTime()> form.endDate.getTime()){
+        } else if (form.startDate.getTime() > form.endDate.getTime()) {
             props.createToastr('error', 'Contract Date is wrong');
             pass = false;
         }
-        if(!pass)
+        if (!pass)
             return;
 
         //send login info validation to API
@@ -76,10 +77,8 @@ const CreateContract = (props) => {
     }
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1000px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
+            width: '900px',
+            margin: '0 auto'
         },
         form: {
             width: '600px',
@@ -96,10 +95,10 @@ const CreateContract = (props) => {
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
+            margin: '0 auto',
         },
         icon: {
             width: '60px',
@@ -127,10 +126,7 @@ const CreateContract = (props) => {
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <GroupIcon />
-                </div>
-                <h2>Create Contract</h2>
+                Create Contract
             </div>
             <Card className={classes.card}>
                 <form className={classes.form}>
@@ -211,19 +207,21 @@ const CreateContract = (props) => {
 
 
                 </form>
-                <Button
-                    variant="contained"
-                    onClick={() => { props.history.push('/viewUsers') }}
-                    style={{ marginLeft: '303px', marginRight: '20px' }}
-                    color="primary">
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={onSubmitHandler}
-                    color="primary">
-                    Save
-                </Button>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => { props.history.push('/viewUsers') }}
+                        style={{ marginLeft: '303px', marginRight: '20px' }}
+                        color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={onSubmitHandler}
+                        color="primary">
+                        Save
+                    </Button>
+                </div>
             </Card>
         </React.Fragment>
     );
