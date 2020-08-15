@@ -128,11 +128,17 @@ const ReviewTimesheet = (props) => {
     // console.log(managedContract);
     const managedTimesheet = managedContract.reduce((acc, curr) => {
 
-        const userName = props.usersList.find(item => curr.employee == item._id)['username'];
-        const sheets = Object.keys(curr.timesheet).map(date => {
-            return { ...curr.timesheet[date], date: date, employee: userName, contractId: curr._id, projectName: curr.contractName };
-        })
-        acc.push(...sheets);
+        if(curr.timesheet){
+            const user = props.usersList.find(item => curr.employee == item._id);
+            const lastName = user.lastname ? user.lastname : '';
+            const userName = (user.firstname ? user.firstname : '') + ' ' + lastName;
+            const sheets = Object.keys(curr.timesheet).map(date => {
+                console.log(date);
+                return { ...curr.timesheet[date], date: date, employee: userName, contractId: curr._id, projectName: curr.contractName };
+            })
+            acc.push(...sheets);
+        }
+        
         return acc;
     }, [])
     console.log(managedTimesheet);

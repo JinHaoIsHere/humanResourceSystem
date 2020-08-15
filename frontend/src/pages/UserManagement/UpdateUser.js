@@ -68,7 +68,7 @@ const UpdateUser = (props) => {
 
     const onSubmitHandler = (event) => {
         //validate
-        if (!form.username) {
+        if (!form.email) {
             props.createToastr('error', 'Required fields are not filled');
             return;
         }
