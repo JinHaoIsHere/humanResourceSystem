@@ -15,6 +15,9 @@ import axios from 'axios';
 import {restoreUser} from './store/actions/users';
 
 //set default headers.
+
+axios.defaults.baseURL = 'http://localhost:3001';
+
 axios.interceptors.request.use(request => {
   const currentUserStr = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserStr);
