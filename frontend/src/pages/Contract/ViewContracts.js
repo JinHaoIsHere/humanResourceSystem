@@ -80,50 +80,54 @@ const ViewContracts = (props) => {
     if (props.contractList != null) {
 
         let entireContractList = props.contractList;
+        entireContractList = entireContractList.map(contractItem=>{
+            const employee = props.usersList.find(item => {
+                return item._id == contractItem.employee
+            });
+            let employeeName = '<not found>';
+            if (employee) {
+                employeeName = ((employee.firstname ? employee.firstname : '')
+                    +' '+ (employee.lastname?employee.lastname:'')).trim();
+            }
+            const manager = props.usersList.find(item => {
+                return item._id == contractItem.manager
+            });
+            let managerName = '<not found>';
+            if (manager) {
+                managerName = ((manager.firstname ? manager.firstname : '')
+                +' '+ (manager.lastname?manager.lastname:'')).trim();
+            }
+            contractItem['employeeName']=employeeName;
+            contractItem['managerName']=managerName;
+            return contractItem;
+        });
         if (search) {
             entireContractList = entireContractList.filter(item => {
-                if (item.firstname && item.firstname.includes(search))
+                if (item.contractName && item.contractName.includes(search))
                     return true;
-                else if (item.lastname && item.lastname.includes(search))
+                else if (item.employeeName && item.employeeName.includes(search))
                     return true;
-                else if (item.email && item.email.includes(search))
+                else if (item.employer && item.employer.includes(search))
                     return true;
                 else if (item.title && item.title.includes(search))
                     return true;
-                else if (item.phone && item.phone.includes(search))
-                    return true;
-                else if (item.role && item.role.includes(search))
+                else if (item.managerName && item.managerName.includes(search))
                     return true;
                 return false;
             });
         }
 
         rows = (rowsPerPage > 0
-            ? props.contractList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : props.contractList
+            ? entireContractList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : entireContractList
         ).map((contract) => {
-            const employee = props.usersList.filter(item => {
-                return item._id == contract.employee
-            });
-            let employeeName = '';
-
-            if (employee.length) {
-                employeeName = employee[0].username;
-            }
-            const manager = props.usersList.filter(item => {
-                return item._id == contract.manager
-            });
-            let managerName = '';
-
-            if (manager.length) {
-                managerName = manager[0].username;
-            }
+            
             return (
                 <TableRow key={contract._id} onClick={() => { props.history.push('/updateContract/' + contract._id) }}>
                     <TableCell align="center">{contract.contractName}</TableCell>
-                    <TableCell align="center">{employeeName}</TableCell>
+                    <TableCell align="center">{contract.employeeName}</TableCell>
                     <TableCell align="center">{contract.employer}</TableCell>
-                    <TableCell align="center">{managerName}</TableCell>
+                    <TableCell align="center">{contract.managerName}</TableCell>
                     <TableCell align="center">{contract.startDate ? moment(contract.startDate).format('YYYY-MM-DD') : null}</TableCell>
                     <TableCell align="center">{contract.endDate ? moment(contract.endDate).format('YYYY-MM-DD') : null}</TableCell>
                 </TableRow>

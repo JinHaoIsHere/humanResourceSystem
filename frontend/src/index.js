@@ -14,9 +14,14 @@ import axios from 'axios';
 
 import {restoreUser} from './store/actions/users';
 
-//set default headers.
+//set headers for dev and prod env
+if (process.env.NODE_ENV == "development") {
+  axios.defaults.baseURL = 'http://localhost:3001';
+}else{
+  axios.defaults.baseURL = 'http://34.83.150.139:3001';
+}
 
-axios.defaults.baseURL = 'http://localhost:3001';
+
 
 axios.interceptors.request.use(request => {
   const currentUserStr = localStorage.getItem("currentUser");

@@ -41,7 +41,7 @@ const StyledMenu = withStyles({
 
 const NavBar = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-
+    console.log(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -83,7 +83,7 @@ const NavBar = (props) => {
         </MenuItem>
         <Divider />
         <MenuItem>
-            <ListItemText primary="Log Out" onClick={()=>{props.onLogOut();}}/>
+            <ListItemText primary="Log Out" onClick={()=>{setAnchorEl(null); props.onLogOut();}}/>
         </MenuItem>
     </StyledMenu></React.Fragment>);
     }else if(currentPath!=='/login'){

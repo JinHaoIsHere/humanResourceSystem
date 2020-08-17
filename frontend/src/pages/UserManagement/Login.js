@@ -41,7 +41,12 @@ const Login = (props) => {
             })
             .catch(error => {
                 console.log(error);
-                props.createToastr('error', error.response.data);
+                if(error.response){
+                    props.createToastr('error', error.response.data);
+                }else{
+                    props.createToastr('error', "Wrong Network");
+                }
+                
             });
     }
     const useStyles = makeStyles((theme) => ({

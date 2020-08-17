@@ -14,7 +14,8 @@ export const fetchContracts = () => {
             })
             .catch(err => {
                 console.log(err);
-                createToastrHelper(dispatch, 'error', err.response.data);
+                if(err.response)
+                    createToastrHelper(dispatch, 'error', err.response.data);
             })
     }
 }
