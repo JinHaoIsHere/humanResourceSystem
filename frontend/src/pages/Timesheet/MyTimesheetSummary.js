@@ -2,10 +2,12 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormHelperText } from '@material-ui/core';
-import AvTimerIcon from '@material-ui/icons/AvTimer';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import AvTimerIcon from '@material-ui/icons/AvTimer';
 import HistoryIcon from '@material-ui/icons/History';
+import moment from 'moment';
+import { connect } from 'react-redux';
 const MyTimesheetSummary = props => {
 
     const useStyles = makeStyles((theme) => ({
@@ -27,7 +29,6 @@ const MyTimesheetSummary = props => {
             justifyContent: 'center',
             '& .cardIcon': {
                 fontSize: '50px',
-                
                 height: '56px',
                 color: '#ff8c42'
             },
@@ -54,6 +55,32 @@ const MyTimesheetSummary = props => {
 
     }));
     const classes = useStyles();
+
+    let countActContract = 0;
+    let countTotContract = 0;
+    let countWeeklyHours = 0;
+    let countTotHours = 0;
+    const momNow = moment();
+    const startOfWeek = moment().startOf('isoWeek').format('YYYY-MM-DD');
+    if (props.currentUserId && props.contractList) {
+        props.contractList.forEach(item => {
+            if (item.employee === props.currentUserId) {
+                if (moment(item.startDate) < momNow && momNow < moment(item.endDate)) {
+                    countActContract++;
+                }
+                countTotContract++;
+                if (item.timesheet) {
+                    for (let key in item.timesheet) {
+                        countTotHours += (item.timesheet[key].sum ? item.timesheet[key].sum : 0);
+                        if (key === startOfWeek) {
+                            countWeeklyHours += (item.timesheet[key].sum ? item.timesheet[key].sum : 0);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     return (
         <div className={classes.page}>
             <div className={classes.title}>SUMMARY</div>
@@ -66,22 +93,22 @@ const MyTimesheetSummary = props => {
             <div className={classes.timeCard}>
                 <div className={classes.card}>
                     <div className='cardIcon'><EventNoteIcon fontSize='inherit' /></div>
-                    <div className='cardHour'>3</div>
+                    <div className='cardHour'>{countTotContract}</div>
                     <div className='cardDes'>Assigned Contract</div>
                 </div>
                 <div className={classes.card}>
                     <div className='cardIcon'><EventAvailableIcon fontSize='inherit' /></div>
-                    <div className='cardHour'>4</div>
+                    <div className='cardHour'>{countActContract}</div>
                     <div className='cardDes'>Active Contract</div>
                 </div>
                 <div className={classes.card}>
                     <div className='cardIcon'><AvTimerIcon fontSize='inherit' /></div>
-                    <div className='cardHour'>2.5h</div>
+                    <div className='cardHour'>{countWeeklyHours}h</div>
                     <div className='cardDes'>Hours This Week</div>
                 </div>
                 <div className={classes.card}>
                     <div className='cardIcon'><HistoryIcon fontSize='inherit' /></div>
-                    <div className='cardHour'>30h</div>
+                    <div className='cardHour'>{countTotHours}h</div>
                     <div className='cardDes'>Total Hours</div>
                 </div>
             </div>
@@ -89,4 +116,14 @@ const MyTimesheetSummary = props => {
         </div>);
 };
 
-export default MyTimesheetSummary;
+const mapStateToProps = state => {
+    return {
+        currentUser: state.user.currentLogInUser,
+        currentUserId: state.user.currentLogInUserId,
+        currentUserPerm: state.user.currentLogInUserPerm,
+        contractList: state.contract.contractList,
+        usersList: state.user.usersList,
+    }
+}
+
+export default connect(mapStateToProps)(MyTimesheetSummary);

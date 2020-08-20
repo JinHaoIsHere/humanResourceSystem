@@ -92,26 +92,12 @@ const ReviewTimesheet = (props) => {
             margin: theme.spacing(1),
             width: '30ch',
         },
-        button: {
-            marginRight: '20px',
-            float: 'right',
-        },
         pageHeader: {
             display: 'flex',
             width: '900px',
             padding: '20px',
             alignItems: 'center',
             margin: '0 auto',
-        },
-        icon: {
-            width: '60px',
-            height: '60px',
-            backgroundColor: '#ECF4FD',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '5px',
-            marginRight: '20px',
         },
         grid: {
             display: 'grid',
@@ -128,7 +114,7 @@ const ReviewTimesheet = (props) => {
     // console.log(managedContract);
     const managedTimesheet = managedContract.reduce((acc, curr) => {
 
-        if(curr.timesheet){
+        if (curr.timesheet) {
             const user = props.usersList.find(item => curr.employee == item._id);
             const lastName = user.lastname ? user.lastname : '';
             const userName = (user.firstname ? user.firstname : '') + ' ' + lastName;
@@ -138,7 +124,7 @@ const ReviewTimesheet = (props) => {
             })
             acc.push(...sheets);
         }
-        
+
         return acc;
     }, [])
     console.log(managedTimesheet);
@@ -152,18 +138,18 @@ const ReviewTimesheet = (props) => {
         // console.log(item.data);
         //  
         let statusStyle = null;
-        if(item.status=="PENDING"){
-            statusStyle={color: 'red'};
-        }else if(item.status=="CONFIRMED"){
-            statusStyle={color: 'green'};
-        }else{
-            statusStyle={color: 'orange'};
+        if (item.status == "PENDING") {
+            statusStyle = { color: 'red' };
+        } else if (item.status == "CONFIRMED") {
+            statusStyle = { color: 'green' };
+        } else {
+            statusStyle = { color: 'orange' };
         }
-        return <React.Fragment ><div key={'c1_'+index}>{index+1}</div>
-        <div key={'c2_'+index}>{item.employee}</div>
-        <div key={'c3_'+index}>{item.projectName}</div>
-        <div key={'c4_'+index}>{item.date}</div>
-        <div key={'c5_'+index} style={statusStyle} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.status}</div></React.Fragment>
+        return <React.Fragment ><div key={'c1_' + index}>{index + 1}</div>
+            <div key={'c2_' + index}>{item.employee}</div>
+            <div key={'c3_' + index}>{item.projectName}</div>
+            <div key={'c4_' + index}>{item.date}</div>
+            <div key={'c5_' + index} style={statusStyle} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.status}</div></React.Fragment>
     });
     const columns = [
         { title: 'Task Name', field: 'task' },
@@ -232,8 +218,9 @@ const ReviewTimesheet = (props) => {
             </div>
             <Card className={classes.card}>
                 <div className={classes.grid}>
-                <div className={classes.title}>#</div> <div className={classes.title}>EMPLOYEE</div><div className={classes.title}>PROJECT NAME</div><div className={classes.title}>DATE</div><div className={classes.title}>STATUS</div>
-                    {tmpSheetList}</div>
+                    <div className={classes.title}>#</div> <div className={classes.title}>EMPLOYEE</div><div className={classes.title}>PROJECT NAME</div><div className={classes.title}>DATE</div><div className={classes.title}>STATUS</div>
+                    {tmpSheetList}
+                </div>
                 {dialog}
             </Card>
 

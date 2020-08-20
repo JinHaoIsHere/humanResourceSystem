@@ -112,6 +112,19 @@ const Timesheet = (props) => {
     const [timesheetData, setState] = React.useState([]);
 
 
+    const totalTime = timesheetData.reduce((acc, curr) => {
+        let curTotal = 0;
+
+        for (const [key, value] of Object.entries(curr)) {
+            console.log(`${key}: ${value}`);
+            if (typeof (value) == 'number' && !isNaN(value)) {
+                curTotal += value;
+            }
+        }
+        console.log(curTotal);
+        return acc + curTotal;
+
+    }, 0);
 
     const onSaveSheet = (status) => {
 
@@ -122,7 +135,9 @@ const Timesheet = (props) => {
                 [timesheetDate]: {
                     data: timesheetData,
                     status: status,
-                },
+                    sum: totalTime,
+                }
+                
             }
         }
         axios.post('/api/contract/update', updateContract)
@@ -228,19 +243,7 @@ const Timesheet = (props) => {
             />
         );
     }
-    const totalTime = timesheetData.reduce((acc, curr) => {
-        let curTotal = 0;
-
-        for (const [key, value] of Object.entries(curr)) {
-            console.log(`${key}: ${value}`);
-            if (typeof (value) == 'number' && !isNaN(value)) {
-                curTotal += value;
-            }
-        }
-        console.log(curTotal);
-        return acc + curTotal;
-
-    }, 0)
+    
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>

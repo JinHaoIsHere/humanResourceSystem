@@ -65,7 +65,7 @@ const CreateContract = (props) => {
             return;
 
         //send login info validation to API
-        axios.post('/api/contract/create', { ...form })
+        axios.post('/api/contract/create', { ...form, timesheet:{} })
             .then(response => {
                 props.createToastr('success', response.data);
                 props.history.push('/viewContracts');
@@ -119,7 +119,9 @@ const CreateContract = (props) => {
     let userOptions = null;
     if (props.usersList) {
         userOptions = props.usersList.map(item => {
-            return (<MenuItem value={item._id} key={item._id}>{item.username}</MenuItem>)
+            const userName = ((item.firstname ? item.firstname : '')
+                +' '+ (item.lastname?item.lastname:'')).trim();
+            return (<MenuItem value={item._id} key={item._id}>{userName}</MenuItem>)
         })
     }
 

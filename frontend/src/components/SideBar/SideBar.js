@@ -94,11 +94,15 @@ const SideBar = (props) => {
                 <ListItem dense>
                     <ListItemText primary='Expired contract' classes={{ primary: classes.listItemText }} />
                 </ListItem>
-                <ListItem button
-                    >
-                    <ListItemIcon><EventBusyIcon /></ListItemIcon>
-                    <ListItemText primary='EG Expired' classes={{ primary: classes.listItemText }} />
-                </ListItem>
+                {props.expiredContract.map(item => {
+                    return (
+                        <ListItem button key={item._id}
+                            onClick={() => { props.history.push('/myTimesheet/' + item._id) }}>
+                            <ListItemIcon><EventAvailableIcon /></ListItemIcon>
+                            <ListItemText primary={item.contractName} classes={{ primary: classes.listItemText }} />
+                        </ListItem>
+                    )
+                })}
             </React.Fragment>
         );
     }

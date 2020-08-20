@@ -149,7 +149,9 @@ const UpdateContract = (props) => {
     let userOptions = null;
     if (props.usersList) {
         userOptions = props.usersList.map(item => {
-            return (<MenuItem value={item._id} key={item._id}>{item.username}</MenuItem>)
+            const userName = ((item.firstname ? item.firstname : '')
+                +' '+ (item.lastname?item.lastname:'')).trim();
+            return (<MenuItem value={item._id} key={item._id}>{userName}</MenuItem>)
         })
     }
 

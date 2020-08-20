@@ -80,27 +80,27 @@ const ViewContracts = (props) => {
     if (props.contractList != null) {
 
         let entireContractList = props.contractList;
-        entireContractList = entireContractList.map(contractItem=>{
-            const employee = props.usersList.find(item => {
-                return item._id == contractItem.employee
-            });
-            let employeeName = '<not found>';
-            if (employee) {
-                employeeName = ((employee.firstname ? employee.firstname : '')
-                    +' '+ (employee.lastname?employee.lastname:'')).trim();
-            }
-            const manager = props.usersList.find(item => {
-                return item._id == contractItem.manager
-            });
-            let managerName = '<not found>';
-            if (manager) {
-                managerName = ((manager.firstname ? manager.firstname : '')
-                +' '+ (manager.lastname?manager.lastname:'')).trim();
-            }
-            contractItem['employeeName']=employeeName;
-            contractItem['managerName']=managerName;
-            return contractItem;
-        });
+        // entireContractList = entireContractList.map(contractItem=>{
+        //     const employee = props.usersList.find(item => {
+        //         return item._id == contractItem.employee
+        //     });
+        //     let employeeName = '<not found>';
+        //     if (employee) {
+        //         employeeName = ((employee.firstname ? employee.firstname : '')
+        //             +' '+ (employee.lastname?employee.lastname:'')).trim();
+        //     }
+        //     const manager = props.usersList.find(item => {
+        //         return item._id == contractItem.manager
+        //     });
+        //     let managerName = '<not found>';
+        //     if (manager) {
+        //         managerName = ((manager.firstname ? manager.firstname : '')
+        //         +' '+ (manager.lastname?manager.lastname:'')).trim();
+        //     }
+        //     contractItem['employeeName']=employeeName;
+        //     contractItem['managerName']=managerName;
+        //     return contractItem;
+        // });
         if (search) {
             entireContractList = entireContractList.filter(item => {
                 if (item.contractName && item.contractName.includes(search))

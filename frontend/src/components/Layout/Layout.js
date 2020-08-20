@@ -5,6 +5,7 @@ import { CssBaseline, Toolbar } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import Toastr from '../Toastr/Toastr';
+import moment from 'moment';
 //This component basically contains navBar SideBar and Footer. Could wrap the entire application
 // To be implemented features:
 // 1. Footer
@@ -15,28 +16,43 @@ const Layout = (props) => {
     useEffect(() => {
         //console.log(props);
         // props.retoreUserInfo();
-        if(currentUser){
+        if (currentUser) {
             props.fetchUserList();
             props.fetchContracts();
         }
-        
+
     }, [currentUser]);
 
     // const curUsr = props.usersList.find(item=>item.username==props.currentUser);
-    
+
     let activeContract = [];
-    if(props.currentUserId && props.contractList){
-        activeContract=props.contractList.filter(item=>{
-            return item.employee===props.currentUserId;
+    let expiredContract = [];
+    const momNow = moment();
+    if (props.currentUserId && props.contractList) {
+
+        props.contractList.forEach(item => {
+            if (item.employee === props.currentUserId) {
+                if (moment(item.startDate) < momNow && momNow < moment(item.endDate)) {
+                    activeContract.push(item);
+                } else {
+                    expiredContract.push(item);
+                }
+            }
         });
     }
+    console.log(activeContract);
     return (
         <div style={{ display: 'flex' }}>
             <CssBaseline />
-            <Toastr/>
-            <NavBar currentUserPerm={props.currentUserPerm} currentUser={props.currentUser}/>
-            <SideBar activeContract = {activeContract}></SideBar>
-            <div style={{ width: '100%', textAlign: 'center'}}>
+            <Toastr />
+            <NavBar
+                currentUserPerm={props.currentUserPerm}
+                currentUser={props.currentUser} />
+            <SideBar
+                activeContract={activeContract}
+                expiredContract={expiredContract}>
+            </SideBar>
+            <div style={{ width: '100%', textAlign: 'center' }}>
                 <Toolbar />
                 {props.children}
             </div>
