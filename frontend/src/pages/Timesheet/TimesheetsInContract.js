@@ -32,7 +32,7 @@ const TimesheetsInContract = (props) => {
         },
         grid: {
             display: 'grid',
-            gridTemplateColumns: '50px 200px 150px 150px 150px',
+            gridTemplateColumns: '50px 150px 150px 150px',
             // width: '700px',
         },
         title: {
@@ -143,10 +143,9 @@ const TimesheetsInContract = (props) => {
                 return (
                     <React.Fragment>
                         <div key={'c1_' + index}>{index + 1}</div>
-                        <div key={'c2_' + index}>{currentContract.contractName}</div>
-                        <div key={'c3_' + index}>{'week ' + Math.round(diff / 7 + 1)}</div>
-                        <div key={'c4_' + index}>{date}</div>
-                        <div key={'c5_' + index}><Link to={props.match.url + '/' + date}>{timesheets[date].status}</Link></div>
+                        <div key={'c2_' + index}>{'week ' + Math.round(diff / 7 + 1)}</div>
+                        <div key={'c3_' + index}>{date}</div>
+                        <div key={'c4_' + index}><Link to={props.match.url + '/' + date}>{timesheets[date].status}</Link></div>
                     </React.Fragment>)
             });
             
@@ -188,7 +187,10 @@ const TimesheetsInContract = (props) => {
 
             <Card className={classes.card}>
                 <div className={classes.grid}>
-                    <div className={classes.title}>#</div> <div className={classes.title}>PROJECT NAME</div><div className={classes.title}>SEQ</div><div className={classes.title}>DATE</div><div className={classes.title}>STATUS</div>
+                    <div className={classes.title}>#</div>
+                    <div className={classes.title}>SEQ</div>
+                    <div className={classes.title}>DATE</div>
+                    <div className={classes.title}>STATUS</div>
                     {sheetList}
                 </div>
             </Card>

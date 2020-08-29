@@ -3,7 +3,6 @@ import TimesheetsInContract from './TimesheetsInContract';
 import { makeStyles } from '@material-ui/core/styles';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { Button } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import * as actions from '../../store/actions';
@@ -23,6 +22,7 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
+import Card from '../../components/Card/Card';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
@@ -57,19 +57,17 @@ const Timesheet = (props) => {
 
     const useStyles = makeStyles((theme) => ({
         card: {
-            width: '1300px',
-            height: 'auto',
-            margin: '20px auto',
-            padding: '30px',
-        },
-        form: {
-            width: '600px',
+            width: '900px',
             margin: '0 auto',
-        },
-        textField: {
-            margin: theme.spacing(1),
-            width: '30ch',
-            textAlign: 'start',
+            '& .MuiToolbar-root': {
+                width: '900px',
+            },
+            '& .MuiTableCell-head': {
+                backgroundColor: '#F5F5F4',
+            },
+            '& *': {
+                fontFamily: 'Chilanka',
+            },
         },
         button: {
             marginRight: '20px',
@@ -77,20 +75,10 @@ const Timesheet = (props) => {
         },
         pageHeader: {
             display: 'flex',
-            height: '100px',
+            width: '900px',
             padding: '20px',
             alignItems: 'center',
-            backgroundColor: '#D9E9FC',
-        },
-        icon: {
-            width: '60px',
-            height: '60px',
-            backgroundColor: '#ECF4FD',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '5px',
-            marginRight: '20px',
+            margin: '0 auto',
         },
         totalTime: {
             float: 'right',
@@ -100,14 +88,14 @@ const Timesheet = (props) => {
     const classes = useStyles();
 
     const columns = [
-        { title: 'Task Name', field: 'task' },
-        { title: 'Monday', field: 'time1', type: 'numeric' },
-        { title: 'Tuesday', field: 'time2', type: 'numeric' },
-        { title: 'Wednesday', field: 'time3', type: 'numeric' },
-        { title: 'Thursday', field: 'time4', type: 'numeric' },
-        { title: 'Friday', field: 'time5', type: 'numeric' },
-        { title: 'Saturday', field: 'time6', type: 'numeric' },
-        { title: 'Sunday', field: 'time7', type: 'numeric' },
+        { title: 'Task Name', field: 'task', width: '200px', align: 'center' },
+        { title: 'Mon', field: 'time1', type: 'numeric', align: 'center' },
+        { title: 'Tue', field: 'time2', type: 'numeric', align: 'center' },
+        { title: 'Wed', field: 'time3', type: 'numeric', align: 'center' },
+        { title: 'Thu', field: 'time4', type: 'numeric', align: 'center' },
+        { title: 'Fri', field: 'time5', type: 'numeric', align: 'center' },
+        { title: 'Sat', field: 'time6', type: 'numeric', align: 'center' },
+        { title: 'Sun', field: 'time7', type: 'numeric', align: 'center' },
     ];
     const [timesheetData, setState] = React.useState([]);
 
@@ -137,7 +125,7 @@ const Timesheet = (props) => {
                     status: status,
                     sum: totalTime,
                 }
-                
+
             }
         }
         axios.post('/api/contract/update', updateContract)
@@ -166,6 +154,7 @@ const Timesheet = (props) => {
 
     }
     let timesheet = null;
+    let pageHeader = 'loading';
     let submitBtn = null;
     if (currentTimesheet) {
         let editableSetting = null;
@@ -217,7 +206,6 @@ const Timesheet = (props) => {
                         className={classes.button}
                         onClick={onSaveSheet.bind(this, 'EDITING')}
                         color="primary">
-
                         Save
                     </Button>
                     <Button
@@ -228,43 +216,47 @@ const Timesheet = (props) => {
                         Submit
                     </Button>
                 </React.Fragment>);
-        }
+        };
+        pageHeader = currentContract.contractName + ' - ' + timesheetDate;
         timesheet = (
             <MaterialTable
                 icons={tableIcons}
-                title={currentContract.contractName + ' - ' + timesheetDate + ' - ' + currentTimesheet.status}
+                title={currentTimesheet.status}
                 columns={columns}
                 data={timesheetData}
                 options={{
-                    search: false
+                    search: false,
+                    tableLayout: 'fixed',
+                }}
+                components={{
+                    Container: props => (<Card  {...props} style={{ padding:'0 0' }}>{props.children}</Card>),
                 }}
                 editable={editableSetting}
-
             />
         );
     }
-    
+
     return (
         <React.Fragment>
             <div className={classes.pageHeader}>
-                <div className={classes.icon}>
-                    <AlarmIcon />
-                </div>
-                <h2>Timesheet</h2>
+                {pageHeader}
             </div>
             <Card className={classes.card}>
                 {timesheet}
-                <div style={{ height: '50px', marginTop: '10px' }}>
-                    <div className={classes.totalTime}><strong>total time : </strong>{totalTime}</div>
+                <div style={{width:'100%'}}>
+                    <div style={{ height: '50px', marginTop: '10px' }}>
+                        <div className={classes.totalTime}><strong>total time : </strong>{totalTime}</div>
+                    </div>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        onClick={() => { props.history.push('../' + contractId) }}
+                        color="primary">
+                        Back
+                    </Button>
+                    {submitBtn}
+
                 </div>
-                <Button
-                    variant="contained"
-                    className={classes.button}
-                    onClick={() => { props.history.push('../' + contractId) }}
-                    color="primary">
-                    Back
-                </Button>
-                {submitBtn}
             </Card>
         </React.Fragment>)
 }

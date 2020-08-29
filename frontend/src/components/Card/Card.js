@@ -5,7 +5,6 @@ const Card = props => {
     let classN = classes.Card;
     if(newProps.className){
         classN = classN +' '+ newProps.className;
-        
         delete newProps.className;
     }
     return (

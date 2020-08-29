@@ -25,8 +25,8 @@ function App() {
           <PrivateRoute path='/updateContract/:id' component={UpdateContract} />
           <PrivateRoute path='/reviewTimesheet' component={ReviewTimesheet} />
           <PrivateRoute path='/myTimesheet' exact component={MyTimesheetSummary}></PrivateRoute>
-          <PrivateRoute path='/myTimesheet/:id' exact component={TimesheetsInContract} />
           <PrivateRoute path='/myTimesheet/:id/:date' component={Timesheet} />
+          <PrivateRoute path='/myTimesheet/:id' exact component={TimesheetsInContract} />
           <Redirect to='/404' />
         </Switch>
       </Layout>

@@ -35,7 +35,10 @@ const ViewContracts = (props) => {
     const useStyles = makeStyles((theme) => ({
         card: {
             width: '900px',
-            margin: '0 auto'
+            margin: '0 auto',
+            '& *': {
+                fontFamily: 'Chilanka',
+            },
         },
         pageHeader: {
             display: 'flex',

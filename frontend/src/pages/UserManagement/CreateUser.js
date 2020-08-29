@@ -54,7 +54,10 @@ const CreateUser = (props) => {
     const useStyles = makeStyles((theme) => ({
         card: {
             width: '900px',
-            margin: '0 auto'
+            margin: '0 auto',
+            '& *': {
+                fontFamily: 'Chilanka',
+            },
         },
         form: {
             width: '600px',

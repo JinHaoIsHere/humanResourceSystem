@@ -54,6 +54,7 @@ const NavBar = (props) => {
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
             backgroundColor: '#393D3F',
+            
         },
         name: {
         }
@@ -93,7 +94,7 @@ const NavBar = (props) => {
     return (
         <React.Fragment>
             <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
+                <Toolbar style={{paddingLeft: '0',}}>
                     {/* <Typography variant="h6" noWrap style={{width:'200px'}}>
                         Authright HRS
                     </Typography> */}
