@@ -140,15 +140,25 @@ const TimesheetsInContract = (props) => {
                 // return (<div key={date}>
                 //     <Link to={props.match.url + '/' + date}>{date} - {timesheets[date].status}</Link>
                 // </div>);
+                const status = timesheets[date].status;
+                let statusStyle = null;
+                if (status === "EDITING") {
+                    statusStyle = { color: 'orange' };
+                } else if (status === "CONFIRMED") {
+                    statusStyle = { color: 'green' };
+                } else {
+                    statusStyle = { color: 'red' };
+                }
+                statusStyle['textDecoration'] = 'none';
                 return (
                     <React.Fragment>
                         <div key={'c1_' + index}>{index + 1}</div>
                         <div key={'c2_' + index}>{'week ' + Math.round(diff / 7 + 1)}</div>
                         <div key={'c3_' + index}>{date}</div>
-                        <div key={'c4_' + index}><Link to={props.match.url + '/' + date}>{timesheets[date].status}</Link></div>
+                        <div   key={'c4_' + index}><Link to={props.match.url + '/' + date} style={statusStyle}>{timesheets[date].status}</Link></div>
                     </React.Fragment>)
             });
-            
+
         }
 
 

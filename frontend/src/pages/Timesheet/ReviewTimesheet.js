@@ -27,12 +27,14 @@ const ReviewTimesheet = (props) => {
     const [open, setOpen] = React.useState(false);
     const [confirmSheet, setConfirmSheet] = React.useState([]);
     const [curContractId, setCurContractId] = React.useState(null);
+    const [curContractStatus, setCurContractStatus] = React.useState(null);
     const [curDate, setCurDate] = React.useState(null);
-    const onOpenConfirmWindow = (data, contractId, date) => {
+    const onOpenConfirmWindow = (data, contractId, date, status) => {
         setOpen(true);
         setConfirmSheet(data);
         setCurContractId(contractId);
         setCurDate(date);
+        setCurContractStatus(status);
         console.log('visiting', contractId);
     };
 
@@ -134,22 +136,23 @@ const ReviewTimesheet = (props) => {
     //     // console.log(item.data);
     //     return <div key={index} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.employee} - {item.date} - {item.status}</div>
     // })
-    tmpSheetList = managedTimesheet.map((item, index) => {
+    tmpSheetList = managedTimesheet.filter(item=>item.status!=="EDITING").map((item, index) => {
         // console.log(item.data);
         //  
         let statusStyle = null;
         if (item.status == "PENDING") {
-            statusStyle = { color: 'red' };
+            statusStyle = { color: 'red'};
         } else if (item.status == "CONFIRMED") {
             statusStyle = { color: 'green' };
         } else {
             statusStyle = { color: 'orange' };
         }
+        
         return <React.Fragment ><div key={'c1_' + index}>{index + 1}</div>
             <div key={'c2_' + index}>{item.employee}</div>
             <div key={'c3_' + index}>{item.projectName}</div>
             <div key={'c4_' + index}>{item.date}</div>
-            <div key={'c5_' + index} style={statusStyle} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date)}>{item.status}</div></React.Fragment>
+            <div key={'c5_' + index} style={statusStyle} onClick={onOpenConfirmWindow.bind(this, item.data, item.contractId, item.date, item.status)}>{item.status}</div></React.Fragment>
     });
     const columns = [
         { title: 'Task Name', field: 'task' },
@@ -178,6 +181,20 @@ const ReviewTimesheet = (props) => {
 
         }, 0);
 
+        let diaBtn = null;
+        if (curContractStatus === "PENDING") {
+            diaBtn = (
+                <DialogActions>
+                    <Button onClick={onSaveSheet.bind(this, 'EDITING')} color="primary">
+                        Decline
+                    </Button>
+                    <Button onClick={onSaveSheet.bind(this, 'CONFIRMED')} color="primary" autoFocus>
+                        Confirme
+                    </Button>
+                </DialogActions>
+            );
+        }
+
         dialog = (<Dialog
             open={open}
             fullWidth={true}
@@ -201,14 +218,7 @@ const ReviewTimesheet = (props) => {
                     <div sytle={{ float: 'right', marginRight: '20px' }}><strong>total time : </strong>{totalTime}</div>
                 </div>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onSaveSheet.bind(this, 'EDITING')} color="primary">
-                    Decline
-                </Button>
-                <Button onClick={onSaveSheet.bind(this, 'CONFIRMED')} color="primary" autoFocus>
-                    Confirme
-                </Button>
-            </DialogActions>
+            {diaBtn}
         </Dialog>);
     }
     return (

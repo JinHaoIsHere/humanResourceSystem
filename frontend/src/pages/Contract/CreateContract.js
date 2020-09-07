@@ -69,6 +69,7 @@ const CreateContract = (props) => {
             .then(response => {
                 props.createToastr('success', response.data);
                 props.history.push('/viewContracts');
+                props.fetchContracts();
             })
             .catch(error => {
                 //console.log(error.response);
@@ -241,7 +242,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchUserList: () => dispatch(actions.fetchUserList),
+        fetchContracts: () => dispatch(actions.fetchContracts()),
         createToastr: (type, message) => dispatch(actions.createToastr(type, message)),
     }
 }

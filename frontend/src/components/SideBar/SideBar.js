@@ -34,10 +34,9 @@ const SideBar = (props) => {
         }
     }));
     const classes = useStyles();
-
     const currentPath = props.history.location.pathname;
     let listItems = null;
-    if (currentPath === '/viewUsers' || currentPath === '/createUser') {
+    if (currentPath.indexOf('User')!==-1) {
         listItems = (
             <React.Fragment>
                 <ListItem button onClick={() => { props.history.push('/viewUsers') }}>
@@ -51,20 +50,20 @@ const SideBar = (props) => {
             </React.Fragment>
         );
     }
-    else if (currentPath === '/viewContracts' || currentPath === '/createContract') {
+    else if (currentPath.indexOf('Contract')!==-1) {
         listItems = (
             <React.Fragment>
                 <ListItem button onClick={() => { props.history.push('/viewContracts') }}>
                     <ListItemIcon><GroupIcon /></ListItemIcon>
-                    <ListItemText primary='All Contracts' />
+                    <ListItemText primary='All Contracts' classes={{ primary: classes.listItemText }}  />
                 </ListItem>
                 <ListItem button onClick={() => { props.history.push('/createContract') }}>
                     <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                    <ListItemText primary='Create Contract'></ListItemText>
+                    <ListItemText primary='Create Contract' classes={{ primary: classes.listItemText }} ></ListItemText>
                 </ListItem>
             </React.Fragment>
         );
-    } else if (currentPath === '/myTimesheet') {
+    } else if (currentPath.indexOf('Timesheet')!==-1) {
         listItems = (
             <React.Fragment>
                 <ListItem dense>
